@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rumah Andalan | AI Visionary</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Manrope:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script type="module">
+      import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+      window.GoogleGenerativeAI = GoogleGenerativeAI;
+    </script>
+  </head>
+  <body>
+    <div class="cursor" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <canvas id="cityCanvas"></canvas>
+
+    <div class="content-wrapper">
+      <div class="glass-panel flex flex-col h-auto">
+        <!-- Header Section -->
+        <div class="flex justify-between items-start mb-4 md:mb-6 shrink-0">
+          <div>
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 mb-2 md:mb-3"
+            >
+              <span
+                class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"
+              ></span>
+              <span
+                class="text-[10px] md:text-xs font-sans uppercase tracking-widest text-brand-accent"
+                >System Online</span
+              >
+            </div>
+            <h1 class="text-2xl md:text-4xl font-serif leading-tight">
+              Rumah
+              <span class="text-gradient font-sans font-bold">Andalan</span>
+            </h1>
+          </div>
+          <!-- Toggle Button for AI Mode -->
+          <button
+            onclick="toggleAIMode()"
+            id="aiToggleBtn"
+            class="group flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full border border-brand-accent/30 hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 bg-black/20 md:bg-transparent backdrop-blur-sm"
+          >
+            <span class="text-lg md:text-xl">✨</span>
+            <span
+              class="text-[10px] md:text-xs font-sans font-bold uppercase tracking-wide group-hover:text-brand-dark hidden md:inline"
+              >Konsultasi AI</span
+            >
+            <span
+              class="text-[10px] md:text-xs font-sans font-bold uppercase tracking-wide group-hover:text-brand-dark md:hidden"
+              >AI</span
+            >
+          </button>
+        </div>
+
+        <div
+          class="h-px w-full bg-gradient-to-r from-brand-accent/50 to-transparent mb-4 md:mb-6 shrink-0"
+        ></div>
+
+        <!-- Content Container (Swappable) -->
+        <div
+          id="mainContent"
+          class="flex-grow overflow-hidden relative min-h-[300px] md:min-h-[400px]"
+        >
+          <!-- VIEW 1: Default Info -->
+          <div
+            id="infoView"
+            class="transition-all duration-500 ease-in-out absolute inset-0 opacity-100 translate-x-0 flex flex-col"
+          >
+            <p
+              class="text-gray-300 font-sans font-light leading-relaxed mb-6 md:mb-8 text-sm md:text-lg"
+            >
+              Kami sedang merenovasi ruang digital kami. Website ini dibangun
+              ulang untuk pengalaman pencarian hunian yang lebih imersif.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
+              <div
+                class="p-3 md:p-4 bg-white/5 rounded-lg border border-white/5 hover:border-brand-accent/30 transition-colors group"
+              >
+                <i
+                  class="fa-solid fa-layer-group text-brand-accent mb-2 text-lg md:text-xl group-hover:scale-110 transition-transform"
+                ></i>
+                <h3 class="font-serif text-white text-sm md:text-base">
+                  Modern Arch
+                </h3>
+                <p class="text-[10px] md:text-xs text-gray-500 mt-1">
+                  Adaptif & sustainable.
+                </p>
+              </div>
+              <div
+                class="p-3 md:p-4 bg-white/5 rounded-lg border border-white/5 hover:border-brand-accent/30 transition-colors group"
+              >
+                <i
+                  class="fa-solid fa-brain text-brand-blue mb-2 text-lg md:text-xl group-hover:scale-110 transition-transform"
+                ></i>
+                <h3 class="font-serif text-white text-sm md:text-base">
+                  Smart Living
+                </h3>
+                <p class="text-[10px] md:text-xs text-gray-500 mt-1">
+                  Tech integrated.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4 mt-auto">
+              <a
+                href="#"
+                class="px-6 py-3 bg-white text-brand-dark font-sans font-bold rounded-lg hover:bg-brand-accent transition-colors duration-300 w-full text-center text-sm md:text-base shadow-lg shadow-brand-accent/10"
+              >
+                Hubungi via WA
+              </a>
+            </div>
+          </div>
+
+          <!-- VIEW 2: AI Concierge -->
+          <div
+            id="aiView"
+            class="transition-all duration-500 ease-in-out absolute inset-0 opacity-0 translate-x-10 pointer-events-none flex flex-col"
+          >
+            <p
+              class="text-brand-accent font-sans text-xs md:text-sm mb-2 font-semibold tracking-wide"
+            >
+              <i class="fa-solid fa-microchip mr-2"></i>AI VISIONARY ARCHITECT
+            </p>
+            <p class="text-gray-400 text-xs md:text-sm mb-4 leading-relaxed">
+              Ceritakan gaya hidup impian Anda. Biarkan AI merancang konsepnya.
+            </p>
+
+            <!-- Chat Area -->
+            <div
+              id="aiResponseArea"
+              class="flex-grow bg-black/30 rounded-lg p-3 md:p-4 mb-4 border border-white/10 font-sans text-xs md:text-sm text-gray-200 overflow-y-auto custom-scroll hidden backdrop-blur-sm"
+            >
+              <!-- AI Response will appear here -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="mt-auto">
+              <textarea
+                id="userPrompt"
+                class="w-full bg-brand-navy/50 border border-brand-accent/30 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-accent transition-colors resize-none font-sans text-xs md:text-sm"
+                rows="3"
+                placeholder="Contoh: Saya butuh ketenangan, suka hujan, dan ingin perpustakaan menghadap taman..."
+              ></textarea>
+
+              <button
+                onclick="generateVision()"
+                id="generateBtn"
+                class="mt-3 w-full py-3 bg-gradient-to-r from-brand-accent to-brand-blue rounded-lg text-white font-bold font-sans tracking-wider hover:opacity-90 transition-opacity flex items-center justify-center gap-2 text-sm md:text-base shadow-lg shadow-brand-blue/20"
+              >
+                <span>GENERATE VISION</span>
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div
+          class="mt-4 md:mt-8 pt-4 border-t border-white/5 flex justify-between items-center text-[10px] text-gray-500 font-sans tracking-wide shrink-0"
+        >
+          <span>GEMINI 2.5 FLASH</span>
+          <span id="systemStatus">IDLE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script src="script.js"></script>
+  </body>
+</html>
