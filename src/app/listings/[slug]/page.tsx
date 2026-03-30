@@ -186,6 +186,22 @@ export default async function PropertyDetailPage({
                       Subsidi
                     </span>
                   )}
+                  {property.is_promo &&
+                    property.promo_labels &&
+                    property.promo_labels.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-1">
+                        {property.promo_labels.map(
+                          (label: string, i: number) => (
+                            <span
+                              key={i}
+                              className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#2E9AB8] text-white"
+                            >
+                              {label}
+                            </span>
+                          ),
+                        )}
+                      </div>
+                    )}
                 </div>
                 <h1 className="font-serif text-[#141422] text-2xl md:text-3xl font-bold leading-tight">
                   {property.title}
