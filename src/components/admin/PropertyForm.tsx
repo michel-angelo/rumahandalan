@@ -435,7 +435,7 @@ export default function PropertyForm({
           {form.is_promo && (
             <div className="flex flex-col gap-2">
               <label className={labelClass}>Label Promo</label>
-              {form.promo_labels.map((label, index) => (
+              {form.promo_labels.map((label: string, index: number) => (
                 <div key={index} className="flex items-center gap-2">
                   <input
                     value={label}
