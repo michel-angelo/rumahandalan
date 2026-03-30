@@ -89,7 +89,7 @@ export default function PropertyForm({
   function removePromoLabel(index: number) {
     setForm((prev) => ({
       ...prev,
-      promo_labels: prev.promo_labels.filter((_, i) => i !== index),
+      promo_labels: prev.promo_labels.filter((_: string, i: number) => i !== index),
     }));
   }
 
