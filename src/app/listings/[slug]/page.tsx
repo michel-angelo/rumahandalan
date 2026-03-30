@@ -3,6 +3,7 @@ import { Property } from "@/types";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import PropertyJsonLd from "@/components/PropertyJsonLd";
 
 async function getProperty(slug: string) {
   const { data, error } = await supabase
@@ -86,6 +87,7 @@ export default async function PropertyDetailPage({
   const waLink = `https://wa.me/${property.whatsapp_number}?text=${waMessage}`;
 
   return (
+    <>
     <div className="bg-[#F7F7FB] min-h-screen">
       {/* Breadcrumb */}
       <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-6 pb-2">
@@ -406,5 +408,7 @@ export default async function PropertyDetailPage({
         </div>
       </div>
     </div>
+    <PropertyJsonLd property={property} />
+    </>
   );
 }
