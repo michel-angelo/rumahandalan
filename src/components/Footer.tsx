@@ -1,7 +1,13 @@
-import Link from 'next/link'
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
-  const waLink = `https://wa.me/6281234567890?text=${encodeURIComponent('Halo, saya ingin konsultasi properti dengan Rumah Andalan.')}`
+  const waLink = `https://wa.me/6281234567890?text=${encodeURIComponent("Halo, saya ingin konsultasi properti dengan Rumah Andalan.")}`;
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <footer className="bg-[#1E1E40] text-white">
@@ -12,7 +18,8 @@ export default function Footer() {
             Rumah <span className="text-[#2E9AB8]">Andalan</span>
           </Link>
           <p className="text-white/60 text-[14px] leading-relaxed mt-3 max-w-sm">
-            Agen properti terpercaya di Depok. Kami membantu Anda menemukan hunian impian dengan proses yang transparan dan profesional.
+            Agen properti terpercaya di Depok. Kami membantu Anda menemukan
+            hunian impian dengan proses yang transparan dan profesional.
           </p>
           <a
             href={waLink}
@@ -30,16 +37,21 @@ export default function Footer() {
 
         {/* Links */}
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-widest text-[#2E9AB8] mb-4">Navigasi</p>
+          <p className="text-[12px] font-semibold uppercase tracking-widest text-[#2E9AB8] mb-4">
+            Navigasi
+          </p>
           <ul className="flex flex-col gap-2.5">
             {[
-              { label: 'Home', href: '/' },
-              { label: 'Properti', href: '/listings' },
-              { label: 'Tentang Kami', href: '/about' },
-              { label: 'Kontak', href: '/contact' },
+              { label: "Home", href: "/" },
+              { label: "Properti", href: "/listings" },
+              { label: "Tentang Kami", href: "/about" },
+              { label: "Kontak", href: "/contact" },
             ].map(({ label, href }) => (
               <li key={href}>
-                <Link href={href} className="text-white/60 hover:text-white text-[14px] transition-colors">
+                <Link
+                  href={href}
+                  className="text-white/60 hover:text-white text-[14px] transition-colors"
+                >
                   {label}
                 </Link>
               </li>
@@ -49,13 +61,18 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-widest text-[#2E9AB8] mb-4">Kontak</p>
+          <p className="text-[12px] font-semibold uppercase tracking-widest text-[#2E9AB8] mb-4">
+            Kontak
+          </p>
           <ul className="flex flex-col gap-3">
-            <li className="text-white/60 text-[14px]">
-              📍 Depok, Jawa Barat
-            </li>
+            <li className="text-white/60 text-[14px]">📍 Depok, Jawa Barat</li>
             <li>
-              <a href={waLink} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-[14px] transition-colors">
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/60 hover:text-white text-[14px] transition-colors"
+              >
                 📱 +62 812-3456-7890
               </a>
             </li>
@@ -69,10 +86,12 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[12px] text-white/40">
-          <p>© {new Date().getFullYear()} Rumah Andalan. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Rumah Andalan. All rights reserved.
+          </p>
           <p>Depok, Jawa Barat</p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

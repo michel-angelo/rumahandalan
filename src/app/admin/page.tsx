@@ -1,4 +1,13 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
+import Link from "next/link";
+import {
+  Building2,
+  CheckCircle2,
+  Map,
+  MessageSquare,
+  Plus,
+  Globe,
+} from "lucide-react";
 
 export default async function AdminDashboardPage() {
   const supabase = await createSupabaseServerClient();
@@ -22,87 +31,109 @@ export default async function AdminDashboardPage() {
     {
       label: "Total Properti",
       value: totalProperties ?? 0,
-      icon: "🏠",
-      color: "bg-[#EEEDF8] text-[#343270]",
+      icon: <Building2 className="w-5 h-5 text-[#AADDE9]" />,
+      iconBg: "bg-[#285090]/20",
     },
     {
       label: "Properti Tersedia",
       value: availableProperties ?? 0,
-      icon: "✅",
-      color: "bg-emerald-50 text-emerald-700",
+      icon: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
+      iconBg: "bg-emerald-500/10",
     },
     {
       label: "Total Cluster",
       value: totalClusters ?? 0,
-      icon: "🏘️",
-      color: "bg-blue-50 text-blue-700",
+      icon: <Map className="w-5 h-5 text-[#9D9BCF]" />,
+      iconBg: "bg-[#6764A8]/20",
     },
     {
       label: "Testimonial",
       value: totalTestimonials ?? 0,
-      icon: "💬",
-      color: "bg-amber-50 text-amber-700",
+      icon: <MessageSquare className="w-5 h-5 text-amber-400" />,
+      iconBg: "bg-amber-500/10",
+    },
+  ];
+
+  const quickActions = [
+    {
+      label: "Tambah Properti",
+      href: "/admin/properties/new",
+      icon: <Plus className="w-4 h-4" />,
+      primary: true,
+    },
+    {
+      label: "Tambah Cluster",
+      href: "/admin/clusters/new",
+      icon: <Plus className="w-4 h-4" />,
+      primary: false,
+    },
+    {
+      label: "Lihat Website",
+      href: "/",
+      icon: <Globe className="w-4 h-4" />,
+      primary: false,
     },
   ];
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="font-serif text-[#141422] text-2xl font-bold">
-          Dashboard
+    <div className="flex flex-col gap-8">
+      {/* Header Section */}
+      <div>
+        <h1 className="text-2xl font-bold text-white tracking-tight">
+          Dashboard Overview
         </h1>
-        <p className="text-[#8E8EA8] text-[14px] mt-1">
-          Selamat datang di admin panel Rumah Andalan.
+        <p className="text-[#8E8EA8] text-[14px] mt-1.5">
+          Pantau performa properti dan kelola data sistem Rumah Andalan.
         </p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map(({ label, value, icon, color }) => (
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map(({ label, value, icon, iconBg }) => (
           <div
             key={label}
-            className="bg-white rounded-2xl border border-[#E4E4F0] p-5"
+            className="bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-xl p-5 transition-colors duration-200"
           >
-            <div
-              className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center text-xl mb-3`}
-            >
-              {icon}
+            <div className="flex items-center justify-between mb-4">
+              <div
+                className={`w-10 h-10 rounded-lg ${iconBg} flex items-center justify-center`}
+              >
+                {icon}
+              </div>
             </div>
-            <p className="font-serif text-[28px] font-bold text-[#141422]">
-              {value}
-            </p>
-            <p className="text-[#8E8EA8] text-[13px] mt-0.5">{label}</p>
+            <div>
+              <p className="text-[#8E8EA8] text-[13px] font-medium mb-1">
+                {label}
+              </p>
+              <p className="text-3xl font-bold text-white tracking-tight">
+                {value}
+              </p>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Quick Links */}
-      <div className="bg-white rounded-2xl border border-[#E4E4F0] p-5">
-        <h2 className="font-serif text-[#141422] text-[17px] font-bold mb-4">
+      {/* Quick Actions Section */}
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-6">
+        <h2 className="text-[16px] text-white font-bold mb-5 tracking-tight">
           Aksi Cepat
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            {
-              label: "Tambah Properti",
-              href: "/admin/properties/new",
-              icon: "➕",
-            },
-            {
-              label: "Tambah Cluster",
-              href: "/admin/clusters/new",
-              icon: "➕",
-            },
-            { label: "Lihat Website", href: "/", icon: "🌐" },
-          ].map(({ label, href, icon }) => (
-            <a
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {quickActions.map(({ label, href, icon, primary }) => (
+            <Link
               key={href}
               href={href}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl border border-[#E4E4F0] hover:border-[#343270] hover:bg-[#EEEDF8] transition-colors text-[14px] font-semibold text-[#343270]"
+              className={`flex items-center justify-center gap-2.5 px-4 py-3 rounded-lg text-[13px] font-medium transition-all duration-200 border ${
+                primary
+                  ? "bg-[#2E9AB8] hover:bg-[#2589a4] text-white border-transparent shadow-sm"
+                  : "bg-white/[0.03] hover:bg-white/[0.08] text-[#EEEDF8] border-white/[0.06]"
+              }`}
             >
-              <span>{icon}</span>
+              <span className={primary ? "text-white" : "text-[#8E8EA8]"}>
+                {icon}
+              </span>
               {label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

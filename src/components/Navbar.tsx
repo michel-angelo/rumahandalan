@@ -1,29 +1,35 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
-  { href: '/listings', label: 'Properti' },
-  { href: '/about', label: 'Tentang Kami' },
-  { href: '/contact', label: 'Kontak' },
-]
+  { href: "/listings", label: "Properti" },
+  { href: "/about", label: "Tentang Kami" },
+  { href: "/contact", label: "Kontak" },
+];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 16)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    const handleScroll = () => setScrolled(window.scrollY > 16);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Lock body scroll when menu is open
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>
@@ -31,14 +37,14 @@ export default function Navbar() {
         className={`
           fixed top-0 left-0 right-0 z-50
           transition-all duration-500 ease-in-out
-          ${scrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.06)] py-3'
-            : 'bg-transparent py-5'
+          ${
+            scrolled
+              ? "bg-white/95 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.06)] py-3"
+              : "bg-transparent py-5"
           }
         `}
       >
         <div className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between">
-
           {/* Logo */}
           <Link
             href="/"
@@ -46,11 +52,13 @@ export default function Navbar() {
             onClick={() => setIsOpen(false)}
           >
             {/* Icon mark */}
-            <span className="
+            <span
+              className="
               flex items-center justify-center w-8 h-8 rounded-lg
               bg-[#285090] text-white text-sm font-bold
               transition-transform duration-300 group-hover:scale-110
-            ">
+            "
+            >
               R
             </span>
             <span className="text-[17px] font-semibold tracking-tight text-gray-900">
@@ -93,7 +101,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            onClick={() => setIsOpen(prev => !prev)}
+            onClick={() => setIsOpen((prev) => !prev)}
             aria-label="Toggle menu"
             className="
               md:hidden flex flex-col justify-center items-center
@@ -103,18 +111,24 @@ export default function Navbar() {
               gap-[5px]
             "
           >
-            <span className={`
+            <span
+              className={`
               block h-[1.5px] bg-gray-700 transition-all duration-300 origin-center
-              ${isOpen ? 'w-5 translate-y-[6.5px] rotate-45' : 'w-5'}
-            `} />
-            <span className={`
+              ${isOpen ? "w-5 translate-y-[6.5px] rotate-45" : "w-5"}
+            `}
+            />
+            <span
+              className={`
               block h-[1.5px] bg-gray-700 transition-all duration-300
-              ${isOpen ? 'w-0 opacity-0' : 'w-4'}
-            `} />
-            <span className={`
+              ${isOpen ? "w-0 opacity-0" : "w-4"}
+            `}
+            />
+            <span
+              className={`
               block h-[1.5px] bg-gray-700 transition-all duration-300 origin-center
-              ${isOpen ? 'w-5 -translate-y-[6.5px] -rotate-45' : 'w-5'}
-            `} />
+              ${isOpen ? "w-5 -translate-y-[6.5px] -rotate-45" : "w-5"}
+            `}
+            />
           </button>
         </div>
       </header>
@@ -124,7 +138,7 @@ export default function Navbar() {
         className={`
           fixed inset-0 z-40 md:hidden
           transition-all duration-300
-          ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+          ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
         `}
         onClick={() => setIsOpen(false)}
       >
@@ -139,7 +153,7 @@ export default function Navbar() {
           flex flex-col
           shadow-2xl
           transition-transform duration-300 ease-in-out
-          ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+          ${isOpen ? "translate-x-0" : "translate-x-full"}
         `}
       >
         {/* Drawer header */}
@@ -162,7 +176,12 @@ export default function Navbar() {
             aria-label="Close menu"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2 2L14 14M14 2L2 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path
+                d="M2 2L14 14M14 2L2 14"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
         </div>
@@ -174,18 +193,30 @@ export default function Navbar() {
               key={href}
               href={href}
               onClick={() => setIsOpen(false)}
-              style={{ transitionDelay: isOpen ? `${i * 50 + 80}ms` : '0ms' }}
+              style={{ transitionDelay: isOpen ? `${i * 50 + 80}ms` : "0ms" }}
               className={`
                 flex items-center justify-between px-4 py-3.5 rounded-xl
                 text-[15px] font-medium text-gray-700
                 hover:text-[#343270] hover:bg-gray-50
                 transition-all duration-300
-                ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}
+                ${isOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"}
               `}
             >
               {label}
-              <svg className="text-gray-300" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                className="text-gray-300"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+              >
+                <path
+                  d="M6 3L11 8L6 13"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </Link>
           ))}
@@ -214,5 +245,5 @@ export default function Navbar() {
         </div>
       </div>
     </>
-  )
+  );
 }

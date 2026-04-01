@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-client";
+import toast from "react-hot-toast";
+import ImageUploader, { PendingImage, UploadedImage } from "./ImageUploader";
 
 type Cluster = { id: string; name: string };
 type Location = { id: string; district: string; city: string };
@@ -29,10 +31,23 @@ export default function PropertyForm({
 }: Props) {
   const router = useRouter();
   const isEdit = !!initialData;
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
+  // --- IMAGE STATES ---
+  const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
+  const [existingImages, setExistingImages] = useState<UploadedImage[]>(
+    initialData?.property_images || initialData?.images || [],
+  );
+  const [imagesToDelete, setImagesToDelete] = useState<UploadedImage[]>([]);
+
+  // Cleanup object URLs to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      pendingImages.forEach((img) => URL.revokeObjectURL(img.preview));
+    };
+  }, [pendingImages]);
+
+  // --- FORM STATE ---
   const [form, setForm] = useState({
     title: initialData?.title ?? "",
     slug: initialData?.slug ?? "",
@@ -74,74 +89,175 @@ export default function PropertyForm({
     }));
   }
 
-  function addPromoLabel() {
-    setForm((prev) => ({ ...prev, promo_labels: [...prev.promo_labels, ""] }));
-  }
-
-  function updatePromoLabel(index: number, value: string) {
-    setForm((prev) => {
-      const updated = [...prev.promo_labels];
-      updated[index] = value;
-      return { ...prev, promo_labels: updated };
-    });
-  }
-
-  function removePromoLabel(index: number) {
-    setForm((prev) => ({
-      ...prev,
-      promo_labels: prev.promo_labels.filter((_: string, i: number) => i !== index),
+  // --- IMAGE HANDLERS ---
+  function handleFilesSelected(files: FileList) {
+    const newPending = Array.from(files).map((file, i) => ({
+      file,
+      preview: URL.createObjectURL(file),
+      // Jadikan primary kalau ini gambar pertama kali yang dimasukkan
+      is_primary:
+        existingImages.length === 0 && pendingImages.length === 0 && i === 0,
     }));
+    setPendingImages((prev) => [...prev, ...newPending]);
   }
 
-  async function handleSubmit() {
-    setLoading(true);
-    setError("");
+  function handleSetPrimary(type: "existing" | "pending", index: number) {
+    if (type === "existing") {
+      setExistingImages((prev) =>
+        prev.map((img, i) => ({ ...img, is_primary: i === index })),
+      );
+      setPendingImages((prev) =>
+        prev.map((img) => ({ ...img, is_primary: false })),
+      );
+    } else {
+      setPendingImages((prev) =>
+        prev.map((img, i) => ({ ...img, is_primary: i === index })),
+      );
+      setExistingImages((prev) =>
+        prev.map((img) => ({ ...img, is_primary: false })),
+      );
+    }
+  }
 
+  function handleRemove(type: "existing" | "pending", index: number) {
+    if (type === "existing") {
+      const imgToRemove = existingImages[index];
+      setImagesToDelete((prev) => [...prev, imgToRemove]); // Masukin antrian hapus
+      setExistingImages((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      setPendingImages((prev) => {
+        const newArr = [...prev];
+        URL.revokeObjectURL(newArr[index].preview); // Cleanup memory
+        newArr.splice(index, 1);
+        return newArr;
+      });
+    }
+  }
+
+  // --- MAIN SUBMIT ACTION ---
+  async function handleSubmit() {
+    const toastId = toast.loading(
+      isEdit ? "Menyimpan perubahan..." : "Menyimpan properti & upload foto...",
+    );
+    setLoading(true);
     const supabase = createSupabaseBrowserClient();
 
-    const payload = {
-      ...form,
-      price: Number(form.price),
-      price_per_month: form.price_per_month
-        ? Number(form.price_per_month)
-        : null,
-      land_area: Number(form.land_area),
-      building_area: Number(form.building_area),
-      floors: Number(form.floors),
-      bedrooms: Number(form.bedrooms),
-      bathrooms: Number(form.bathrooms),
-      cluster_id: form.cluster_id || null,
-      location_id: form.location_id || null,
-    };
+    try {
+      const payload = {
+        ...form,
+        price: Number(form.price),
+        price_per_month: form.price_per_month
+          ? Number(form.price_per_month)
+          : null,
+        land_area: Number(form.land_area),
+        building_area: Number(form.building_area),
+        floors: Number(form.floors),
+        bedrooms: Number(form.bedrooms),
+        bathrooms: Number(form.bathrooms),
+        cluster_id: form.cluster_id || null,
+        location_id: form.location_id || null,
+      };
 
-    const { error } = isEdit
-      ? await supabase
+      // 1. SAVE PROPERTY TEXT
+      let propertyId = initialData?.id;
+      if (isEdit) {
+        const { error } = await supabase
           .from("properties")
           .update(payload)
-          .eq("id", initialData.id)
-      : await supabase.from("properties").insert(payload);
+          .eq("id", propertyId);
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from("properties")
+          .insert(payload)
+          .select("id")
+          .single();
+        if (error) throw error;
+        propertyId = data.id;
+      }
 
-    if (error) {
-      setError(error.message);
+      // 2. UPLOAD PENDING IMAGES
+      if (pendingImages.length > 0) {
+        for (const img of pendingImages) {
+          const ext = img.file.name.split(".").pop();
+          const fileName = `${propertyId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("property-images")
+            .upload(fileName, img.file);
+
+          if (!uploadError) {
+            const {
+              data: { publicUrl },
+            } = supabase.storage.from("property-images").getPublicUrl(fileName);
+            await supabase.from("property_images").insert({
+              property_id: propertyId,
+              url: publicUrl,
+              is_primary: img.is_primary,
+              order: 0,
+            });
+          }
+        }
+      }
+
+      // 3. UPDATE EXISTING IMAGES (Cuma update kalau is_primary nya berubah)
+      if (isEdit && existingImages.length > 0) {
+        for (const img of existingImages) {
+          if (img.id) {
+            await supabase
+              .from("property_images")
+              .update({ is_primary: img.is_primary })
+              .eq("id", img.id);
+          } else {
+            await supabase
+              .from("property_images")
+              .update({ is_primary: img.is_primary })
+              .eq("url", img.url);
+          }
+        }
+      }
+
+      // 4. DELETE REMOVED IMAGES (Hapus dari storage & DB)
+      if (isEdit && imagesToDelete.length > 0) {
+        for (const img of imagesToDelete) {
+          const pathParts = img.url.split("/property-images/");
+          if (pathParts.length > 1) {
+            await supabase.storage
+              .from("property-images")
+              .remove([pathParts[1]]);
+          }
+          await supabase.from("property_images").delete().eq("url", img.url);
+        }
+      }
+
+      toast.success(
+        isEdit ? "Perubahan berhasil disimpan!" : "Properti berhasil dibuat!",
+        { id: toastId },
+      );
+      router.push("/admin/properties");
+      router.refresh();
+    } catch (error: any) {
+      console.error(error);
+      toast.error(`Gagal: ${error.message}`, { id: toastId });
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/admin/properties");
-    router.refresh();
   }
 
+  // UI Variables
   const inputClass =
-    "w-full border border-[#E4E4F0] rounded-xl px-4 py-2.5 text-[14px] text-[#141422] focus:outline-none focus:border-[#343270] transition-colors";
-  const labelClass = "text-[12px] font-semibold text-[#5A5A78] mb-1 block";
+    "w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-2.5 text-[14px] text-white placeholder:text-[#8E8EA8] focus:outline-none focus:border-[#2E9AB8] focus:ring-1 focus:ring-[#2E9AB8] transition-all";
+  const labelClass =
+    "text-[12px] font-semibold text-[#8E8EA8] mb-1.5 block uppercase tracking-wider";
+  const cardClass =
+    "bg-white/[0.02] rounded-2xl border border-white/[0.06] p-6";
+  const titleClass = "text-white text-[16px] font-bold mb-5 tracking-tight";
 
   return (
     <div className="flex flex-col gap-6">
       {/* Basic Info */}
-      <div className="bg-white rounded-2xl border border-[#E4E4F0] p-6">
-        <h2 className="font-serif text-[#141422] text-[17px] font-bold mb-5">
-          Informasi Dasar
-        </h2>
+      <div className={cardClass}>
+        <h2 className={titleClass}>Informasi Dasar</h2>
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className={labelClass}>Judul Properti</label>
@@ -172,8 +288,12 @@ export default function PropertyForm({
                 onChange={handleChange}
                 className={inputClass}
               >
-                <option value="rumah">Rumah</option>
-                <option value="apartemen">Apartemen</option>
+                <option value="rumah" className="bg-[#12121C]">
+                  Rumah
+                </option>
+                <option value="apartemen" className="bg-[#12121C]">
+                  Apartemen
+                </option>
               </select>
             </div>
             <div>
@@ -184,9 +304,15 @@ export default function PropertyForm({
                 onChange={handleChange}
                 className={inputClass}
               >
-                <option value="tersedia">Tersedia</option>
-                <option value="inden">Inden</option>
-                <option value="terjual">Terjual</option>
+                <option value="tersedia" className="bg-[#12121C]">
+                  Tersedia
+                </option>
+                <option value="inden" className="bg-[#12121C]">
+                  Inden
+                </option>
+                <option value="terjual" className="bg-[#12121C]">
+                  Terjual
+                </option>
               </select>
             </div>
             <div>
@@ -197,8 +323,12 @@ export default function PropertyForm({
                 onChange={handleChange}
                 className={inputClass}
               >
-                <option value="baru">Baru</option>
-                <option value="second">Second</option>
+                <option value="baru" className="bg-[#12121C]">
+                  Baru
+                </option>
+                <option value="second" className="bg-[#12121C]">
+                  Second
+                </option>
               </select>
             </div>
             <div>
@@ -209,9 +339,15 @@ export default function PropertyForm({
                 onChange={handleChange}
                 className={inputClass}
               >
-                <option value="shm">SHM</option>
-                <option value="hgb">HGB</option>
-                <option value="ajb">AJB</option>
+                <option value="shm" className="bg-[#12121C]">
+                  SHM
+                </option>
+                <option value="hgb" className="bg-[#12121C]">
+                  HGB
+                </option>
+                <option value="ajb" className="bg-[#12121C]">
+                  AJB
+                </option>
               </select>
             </div>
           </div>
@@ -230,10 +366,8 @@ export default function PropertyForm({
       </div>
 
       {/* Harga */}
-      <div className="bg-white rounded-2xl border border-[#E4E4F0] p-6">
-        <h2 className="font-serif text-[#141422] text-[17px] font-bold mb-5">
-          Harga
-        </h2>
+      <div className={cardClass}>
+        <h2 className={titleClass}>Harga</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className={labelClass}>Harga (Rp)</label>
@@ -243,7 +377,6 @@ export default function PropertyForm({
               value={form.price}
               onChange={handleChange}
               className={inputClass}
-              placeholder="750000000"
             />
           </div>
           <div>
@@ -264,17 +397,14 @@ export default function PropertyForm({
               value={form.price_per_month}
               onChange={handleChange}
               className={inputClass}
-              placeholder="5000000"
             />
           </div>
         </div>
       </div>
 
       {/* Spesifikasi */}
-      <div className="bg-white rounded-2xl border border-[#E4E4F0] p-6">
-        <h2 className="font-serif text-[#141422] text-[17px] font-bold mb-5">
-          Spesifikasi
-        </h2>
+      <div className={cardClass}>
+        <h2 className={titleClass}>Spesifikasi</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div>
             <label className={labelClass}>Luas Tanah (m²)</label>
@@ -284,7 +414,6 @@ export default function PropertyForm({
               value={form.land_area}
               onChange={handleChange}
               className={inputClass}
-              placeholder="72"
             />
           </div>
           <div>
@@ -295,7 +424,6 @@ export default function PropertyForm({
               value={form.building_area}
               onChange={handleChange}
               className={inputClass}
-              placeholder="60"
             />
           </div>
           <div>
@@ -306,7 +434,6 @@ export default function PropertyForm({
               value={form.floors}
               onChange={handleChange}
               className={inputClass}
-              placeholder="2"
             />
           </div>
           <div>
@@ -317,7 +444,6 @@ export default function PropertyForm({
               value={form.bedrooms}
               onChange={handleChange}
               className={inputClass}
-              placeholder="3"
             />
           </div>
           <div>
@@ -328,17 +454,14 @@ export default function PropertyForm({
               value={form.bathrooms}
               onChange={handleChange}
               className={inputClass}
-              placeholder="2"
             />
           </div>
         </div>
       </div>
 
       {/* Lokasi & Cluster */}
-      <div className="bg-white rounded-2xl border border-[#E4E4F0] p-6">
-        <h2 className="font-serif text-[#141422] text-[17px] font-bold mb-5">
-          Lokasi & Cluster
-        </h2>
+      <div className={cardClass}>
+        <h2 className={titleClass}>Lokasi & Cluster</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Lokasi (Kecamatan)</label>
@@ -348,9 +471,11 @@ export default function PropertyForm({
               onChange={handleChange}
               className={inputClass}
             >
-              <option value="">Pilih Lokasi</option>
+              <option value="" className="bg-[#12121C]">
+                Pilih Lokasi
+              </option>
               {locations.map((l) => (
-                <option key={l.id} value={l.id}>
+                <option key={l.id} value={l.id} className="bg-[#12121C]">
                   {l.district}, {l.city}
                 </option>
               ))}
@@ -364,34 +489,43 @@ export default function PropertyForm({
               onChange={handleChange}
               className={inputClass}
             >
-              <option value="">Pilih Cluster</option>
+              <option value="" className="bg-[#12121C]">
+                Pilih Cluster
+              </option>
               {clusters.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.id} value={c.id} className="bg-[#12121C]">
                   {c.name}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className={labelClass}>Nomor WhatsApp Agen</label>
+            <label className={labelClass}>Nomor WhatsApp</label>
             <input
               name="whatsapp_number"
               value={form.whatsapp_number}
               onChange={handleChange}
               className={inputClass}
-              placeholder="6281234567890"
             />
           </div>
         </div>
       </div>
 
-      {/* Opsi */}
-      <div className="bg-white rounded-2xl border border-[#E4E4F0] p-6">
-        <h2 className="font-serif text-[#141422] text-[17px] font-bold mb-5">
-          Opsi Tambahan
-        </h2>
+      {/* --- FOTO PROPERTI (Dipindah ke Sini) --- */}
+      <div className={cardClass}>
+        <h2 className={titleClass}>Foto Properti</h2>
+        <ImageUploader
+          pendingImages={pendingImages}
+          existingImages={existingImages}
+          onFilesSelected={handleFilesSelected}
+          onSetPrimary={handleSetPrimary}
+          onRemove={handleRemove}
+        />
+      </div>
 
-        {/* Checkboxes */}
+      {/* Opsi */}
+      <div className={cardClass}>
+        <h2 className={titleClass}>Opsi Tambahan</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {[
             { name: "is_featured", label: "Properti Unggulan" },
@@ -401,91 +535,56 @@ export default function PropertyForm({
           ].map(({ name, label }) => (
             <label
               key={name}
-              className="flex items-center gap-2.5 cursor-pointer"
+              className="flex items-center gap-2.5 cursor-pointer group"
             >
               <input
                 type="checkbox"
                 name={name}
                 checked={form[name as keyof typeof form] as boolean}
                 onChange={handleChange}
-                className="w-4 h-4 rounded accent-[#343270]"
+                className="w-4 h-4 rounded border-white/20 bg-white/5 accent-[#2E9AB8] focus:ring-[#2E9AB8]"
               />
-              <span className="text-[14px] text-[#3E3E58] font-medium">
+              <span className="text-[14px] text-[#EEEDF8] group-hover:text-white transition-colors">
                 {label}
               </span>
             </label>
           ))}
         </div>
-
-        {/* Promo */}
-        <div className="border-t border-[#F0F0F8] pt-5">
-          <label className="flex items-center gap-2.5 cursor-pointer mb-4">
+        <div className="border-t border-white/[0.06] pt-5">
+          <label className="flex items-center gap-2.5 cursor-pointer mb-4 group">
             <input
               type="checkbox"
               name="is_promo"
               checked={form.is_promo}
               onChange={handleChange}
-              className="w-4 h-4 rounded accent-[#343270]"
+              className="w-4 h-4 rounded border-white/20 bg-white/5 accent-[#2E9AB8] focus:ring-[#2E9AB8]"
             />
-            <span className="text-[14px] text-[#3E3E58] font-medium">
+            <span className="text-[14px] text-[#EEEDF8] font-medium group-hover:text-white transition-colors">
               Properti Sedang Promo
             </span>
           </label>
-
-          {form.is_promo && (
-            <div className="flex flex-col gap-2">
-              <label className={labelClass}>Label Promo</label>
-              {form.promo_labels.map((label: string, index: number) => (
-                <div key={index} className="flex items-center gap-2">
-                  <input
-                    value={label}
-                    onChange={(e) => updatePromoLabel(index, e.target.value)}
-                    className={inputClass}
-                    placeholder="DP 0%, Free BPHTB, Cashback 10 Jt, dll"
-                  />
-                  <button
-                    onClick={() => removePromoLabel(index)}
-                    className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg border border-red-200 text-red-400 hover:bg-red-50 transition-colors"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              <button
-                onClick={addPromoLabel}
-                className="mt-1 px-4 py-2 rounded-xl border border-dashed border-[#C8C7E8] text-[#343270] text-[13px] font-semibold hover:bg-[#EEEDF8] transition-colors"
-              >
-                + Tambah Label Promo
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
-      {error && (
-        <p className="text-red-500 text-[14px] bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-          {error}
-        </p>
-      )}
-
       {/* Actions */}
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-3 pb-10">
         <button
           onClick={() => router.back()}
-          className="px-6 py-2.5 border border-[#E4E4F0] rounded-xl text-[14px] font-semibold text-[#5A5A78] hover:border-[#343270] transition-colors"
+          disabled={loading}
+          className="px-6 py-2.5 bg-white/[0.03] border border-white/[0.06] rounded-xl text-[14px] font-medium text-white hover:bg-white/[0.08] transition-colors disabled:opacity-50"
         >
           Batal
         </button>
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="px-6 py-2.5 bg-[#343270] text-white rounded-xl text-[14px] font-semibold hover:bg-[#2E9AB8] transition-colors disabled:opacity-50"
+          className="px-6 py-2.5 bg-[#2E9AB8] border border-transparent text-white rounded-xl text-[14px] font-semibold hover:bg-[#2589a4] transition-colors disabled:opacity-50"
         >
           {loading
             ? "Menyimpan..."
             : isEdit
               ? "Simpan Perubahan"
-              : "Tambah Properti"}
+              : "Simpan Properti"}
         </button>
       </div>
     </div>
