@@ -62,7 +62,7 @@ export type Property = {
 export type PropertyImage = {
   id: string;
   property_id: string;
-  image_url: string;
+  url: string;
   is_primary: boolean;
   order: number;
 };
