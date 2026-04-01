@@ -1,141 +1,110 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
-import Link from "next/link";
 import {
   Building2,
-  CheckCircle2,
   Map,
+  MapPin,
   MessageSquare,
-  Plus,
-  Globe,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 
 export default async function AdminDashboardPage() {
   const supabase = await createSupabaseServerClient();
 
+  // Ambil total data dari masing-masing tabel (pake metode 'head' biar enteng & cepet)
   const [
-    { count: totalProperties },
-    { count: availableProperties },
-    { count: totalClusters },
-    { count: totalTestimonials },
+    { count: propertyCount },
+    { count: clusterCount },
+    { count: locationCount },
+    { count: testimonialCount },
   ] = await Promise.all([
     supabase.from("properties").select("*", { count: "exact", head: true }),
-    supabase
-      .from("properties")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "tersedia"),
     supabase.from("clusters").select("*", { count: "exact", head: true }),
+    supabase.from("locations").select("*", { count: "exact", head: true }),
     supabase.from("testimonials").select("*", { count: "exact", head: true }),
   ]);
 
   const stats = [
     {
-      label: "Total Properti",
-      value: totalProperties ?? 0,
-      icon: <Building2 className="w-5 h-5 text-[#AADDE9]" />,
-      iconBg: "bg-[#285090]/20",
+      title: "Total Properti",
+      count: propertyCount || 0,
+      icon: Building2,
+      color: "text-[#2E9AB8]",
+      bg: "bg-[#2E9AB8]/10",
+      link: "/admin/properties",
     },
     {
-      label: "Properti Tersedia",
-      value: availableProperties ?? 0,
-      icon: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
-      iconBg: "bg-emerald-500/10",
+      title: "Total Cluster",
+      count: clusterCount || 0,
+      icon: Map,
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+      link: "/admin/clusters",
     },
     {
-      label: "Total Cluster",
-      value: totalClusters ?? 0,
-      icon: <Map className="w-5 h-5 text-[#9D9BCF]" />,
-      iconBg: "bg-[#6764A8]/20",
+      title: "Total Lokasi",
+      count: locationCount || 0,
+      icon: MapPin,
+      color: "text-amber-400",
+      bg: "bg-amber-500/10",
+      link: "/admin/locations",
     },
     {
-      label: "Testimonial",
-      value: totalTestimonials ?? 0,
-      icon: <MessageSquare className="w-5 h-5 text-amber-400" />,
-      iconBg: "bg-amber-500/10",
-    },
-  ];
-
-  const quickActions = [
-    {
-      label: "Tambah Properti",
-      href: "/admin/properties/new",
-      icon: <Plus className="w-4 h-4" />,
-      primary: true,
-    },
-    {
-      label: "Tambah Cluster",
-      href: "/admin/clusters/new",
-      icon: <Plus className="w-4 h-4" />,
-      primary: false,
-    },
-    {
-      label: "Lihat Website",
-      href: "/",
-      icon: <Globe className="w-4 h-4" />,
-      primary: false,
+      title: "Testimonial",
+      count: testimonialCount || 0,
+      icon: MessageSquare,
+      color: "text-purple-400",
+      bg: "bg-purple-500/10",
+      link: "/admin/testimonials",
     },
   ];
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Header Section */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">
           Dashboard Overview
         </h1>
         <p className="text-[#8E8EA8] text-[14px] mt-1.5">
-          Pantau performa properti dan kelola data sistem Rumah Andalan.
+          Selamat datang di panel admin. Berikut adalah ringkasan data saat ini.
         </p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map(({ label, value, icon, iconBg }) => (
-          <div
-            key={label}
-            className="bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-xl p-5 transition-colors duration-200"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div
-                className={`w-10 h-10 rounded-lg ${iconBg} flex items-center justify-center`}
-              >
-                {icon}
-              </div>
-            </div>
-            <div>
-              <p className="text-[#8E8EA8] text-[13px] font-medium mb-1">
-                {label}
-              </p>
-              <p className="text-3xl font-bold text-white tracking-tight">
-                {value}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quick Actions Section */}
-      <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-6">
-        <h2 className="text-[16px] text-white font-bold mb-5 tracking-tight">
-          Aksi Cepat
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {quickActions.map(({ label, href, icon, primary }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`flex items-center justify-center gap-2.5 px-4 py-3 rounded-lg text-[13px] font-medium transition-all duration-200 border ${
-                primary
-                  ? "bg-[#2E9AB8] hover:bg-[#2589a4] text-white border-transparent shadow-sm"
-                  : "bg-white/[0.03] hover:bg-white/[0.08] text-[#EEEDF8] border-white/[0.06]"
-              }`}
+        {stats.map((stat, i) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={i}
+              className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 flex flex-col relative group overflow-hidden hover:bg-white/[0.04] transition-colors"
             >
-              <span className={primary ? "text-white" : "text-[#8E8EA8]"}>
-                {icon}
-              </span>
-              {label}
-            </Link>
-          ))}
-        </div>
+              <div className="flex items-center justify-between mb-4">
+                <div
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg}`}
+                >
+                  <Icon className={`w-6 h-6 ${stat.color}`} />
+                </div>
+                <Link
+                  href={stat.link}
+                  className="p-2 bg-white/[0.03] hover:bg-white/[0.1] rounded-lg transition-colors text-[#8E8EA8] hover:text-white"
+                  title={`Lihat ${stat.title}`}
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+              <div>
+                <p className="text-[#8E8EA8] text-[13px] font-medium uppercase tracking-wider mb-1">
+                  {stat.title}
+                </p>
+                <h3 className="text-3xl font-bold text-white">{stat.count}</h3>
+              </div>
+              {/* Efek Cahaya Dekoratif di pojok kanan bawah kartu */}
+              <div
+                className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] opacity-20 pointer-events-none ${stat.bg.replace("/10", "")}`}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

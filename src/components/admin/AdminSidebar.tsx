@@ -13,6 +13,7 @@ import {
   Cpu,
   Fingerprint,
 } from "lucide-react";
+import LogoutButton from "./LogoutButton";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -134,20 +135,9 @@ export default function AdminSidebar() {
               </span>
             </div>
           </div>
-
-          {/* Cyberpunk Logout Button */}
-          <button
-            onClick={handleLogout}
-            className="group relative w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[13px] font-medium text-red-400 hover:text-white overflow-hidden transition-all duration-300"
-          >
-            <div className="absolute inset-0 bg-red-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.3)] rounded-xl" />
-
-            <Power className="relative z-10 w-4 h-4 group-hover:animate-pulse" />
-            <span className="relative z-10 tracking-widest uppercase text-[11px] font-bold">
-              Terminate Session
-            </span>
-          </button>
+        </div>
+        <div className="p-4 border-t border-white/[0.06] mt-auto">
+          <LogoutButton />
         </div>
       </aside>
     </>
