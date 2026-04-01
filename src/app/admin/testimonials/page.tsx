@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import Link from "next/link";
 import { Plus, Edit2, MessageSquare, Star } from "lucide-react";
+import DeleteActionButton from "@/components/admin/DeleteActionButton";
 
 export default async function AdminTestimonialsPage() {
   const supabase = await createSupabaseServerClient();
@@ -35,7 +36,6 @@ export default async function AdminTestimonialsPage() {
       <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl overflow-hidden">
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            {/* Table Head */}
             <thead className="bg-white/[0.02] border-b border-white/[0.06]">
               <tr>
                 <th className="px-6 py-4 font-medium text-[#8E8EA8]">
@@ -51,8 +51,6 @@ export default async function AdminTestimonialsPage() {
                 </th>
               </tr>
             </thead>
-
-            {/* Table Body */}
             <tbody className="divide-y divide-white/[0.06]">
               {!testimonials || testimonials.length === 0 ? (
                 <tr>
@@ -93,11 +91,9 @@ export default async function AdminTestimonialsPage() {
                         </div>
                       </div>
                     </td>
-
                     <td className="px-6 py-4 text-[#EEEDF8]">
                       {testimonial.property_bought || "-"}
                     </td>
-
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-1.5">
                         <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
@@ -106,7 +102,6 @@ export default async function AdminTestimonialsPage() {
                         </span>
                       </div>
                     </td>
-
                     <td className="px-6 py-4">
                       {testimonial.is_published ? (
                         <span className="inline-flex px-2.5 py-1 rounded-full text-[11px] font-medium border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
@@ -118,7 +113,6 @@ export default async function AdminTestimonialsPage() {
                         </span>
                       )}
                     </td>
-
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <Link
@@ -128,6 +122,13 @@ export default async function AdminTestimonialsPage() {
                         >
                           <Edit2 className="w-4 h-4" />
                         </Link>
+
+                        {/* Tombol Hapus Universal */}
+                        <DeleteActionButton
+                          table="testimonials"
+                          id={testimonial.id}
+                          itemName={testimonial.name}
+                        />
                       </div>
                     </td>
                   </tr>

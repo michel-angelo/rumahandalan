@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import Link from "next/link";
-import { Plus, Edit2, Map, MapPin } from "lucide-react";
+import { Plus, Edit2, Map } from "lucide-react";
+import DeleteActionButton from "@/components/admin/DeleteActionButton";
 
 export default async function AdminClustersPage() {
   const supabase = await createSupabaseServerClient();
@@ -11,7 +12,6 @@ export default async function AdminClustersPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Header & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
@@ -31,11 +31,9 @@ export default async function AdminClustersPage() {
         </Link>
       </div>
 
-      {/* Table Section */}
       <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl overflow-hidden">
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            {/* Table Head */}
             <thead className="bg-white/[0.02] border-b border-white/[0.06]">
               <tr>
                 <th className="px-6 py-4 font-medium text-[#8E8EA8]">
@@ -51,7 +49,6 @@ export default async function AdminClustersPage() {
               </tr>
             </thead>
 
-            {/* Table Body */}
             <tbody className="divide-y divide-white/[0.06]">
               {!clusters || clusters.length === 0 ? (
                 <tr>
@@ -113,6 +110,12 @@ export default async function AdminClustersPage() {
                         >
                           <Edit2 className="w-4 h-4" />
                         </Link>
+                        {/* Ini Tombol Hapus Universal-nya */}
+                        <DeleteActionButton
+                          table="clusters"
+                          id={cluster.id}
+                          itemName={cluster.name}
+                        />
                       </div>
                     </td>
                   </tr>

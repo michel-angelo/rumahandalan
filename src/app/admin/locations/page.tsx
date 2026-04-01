@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import Link from "next/link";
 import { Plus, Edit2, MapPin } from "lucide-react";
+import DeleteActionButton from "@/components/admin/DeleteActionButton";
 
 export default async function AdminLocationsPage() {
   const supabase = await createSupabaseServerClient();
@@ -35,7 +36,6 @@ export default async function AdminLocationsPage() {
       <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl overflow-hidden">
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            {/* Table Head */}
             <thead className="bg-white/[0.02] border-b border-white/[0.06]">
               <tr>
                 <th className="px-6 py-4 font-medium text-[#8E8EA8]">
@@ -50,8 +50,6 @@ export default async function AdminLocationsPage() {
                 </th>
               </tr>
             </thead>
-
-            {/* Table Body */}
             <tbody className="divide-y divide-white/[0.06]">
               {!locations || locations.length === 0 ? (
                 <tr>
@@ -84,14 +82,12 @@ export default async function AdminLocationsPage() {
                         </p>
                       </div>
                     </td>
-
                     <td className="px-6 py-4 text-[#EEEDF8]">
                       {location.city}
                     </td>
                     <td className="px-6 py-4 text-[#8E8EA8]">
                       {location.province}
                     </td>
-
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <Link
@@ -101,6 +97,13 @@ export default async function AdminLocationsPage() {
                         >
                           <Edit2 className="w-4 h-4" />
                         </Link>
+
+                        {/* Tombol Hapus Universal */}
+                        <DeleteActionButton
+                          table="locations"
+                          id={location.id}
+                          itemName={location.district}
+                        />
                       </div>
                     </td>
                   </tr>
