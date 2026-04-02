@@ -1,6 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import PropertyForm from "@/components/admin/PropertyForm";
-import ImageUploader from "@/components/admin/ImageUploader";
 import { notFound } from "next/navigation";
 
 export default async function EditPropertyPage({
@@ -29,6 +28,12 @@ export default async function EditPropertyPage({
 
   if (!property) notFound();
 
+  // Gabungkan data gambar ke property agar bisa dibaca oleh PropertyForm
+  const propertyWithImages = {
+    ...property,
+    images: images || [],
+  };
+
   return (
     <div>
       <div className="mb-6">
@@ -38,26 +43,16 @@ export default async function EditPropertyPage({
         <p className="text-[#8E8EA8] text-[14px] mt-1">{property.title}</p>
       </div>
 
+      {/* Kirim propertyWithImages yang sudah berisi foto ke dalam form */}
       <PropertyForm
         clusters={clusters ?? []}
         locations={locations ?? []}
-        initialData={property}
+        initialData={propertyWithImages}
       />
 
-      {/* Foto Properti */}
-      <div className="bg-white rounded-2xl border border-[#E4E4F0] p-6 mt-6">
-        <h2 className="font-serif text-[#141422] text-[17px] font-bold mb-5">
-          Foto Properti
-        </h2>
-        <ImageUploader
-          propertyId={id}
-          existingImages={(images ?? []).map((img) => ({
-            url: img.url, // <-- Ubah jadi img.url
-            is_primary: img.is_primary,
-            order: img.order,
-          }))}
-        />
-      </div>
+      {/* BAGIAN <ImageUploader /> YANG LAMA DI SINI DIHAPUS SAJA
+        KARENA SUDAH DI-HANDLE OLEH <PropertyForm /> 
+      */}
     </div>
   );
 }
