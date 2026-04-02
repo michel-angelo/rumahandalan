@@ -16,7 +16,6 @@ export type UploadedImage = {
 };
 
 type Props = {
-  propertyId: string;
   pendingImages: PendingImage[];
   existingImages?: UploadedImage[];
   onFilesSelected: (files: FileList) => void;
