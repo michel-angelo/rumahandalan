@@ -47,6 +47,10 @@ export default function PropertyForm({
     };
   }, [pendingImages]);
 
+  const [facilitiesInput, setFacilitiesInput] = useState(
+    initialData?.facilities?.join("\n") || "",
+  );
+
   // --- FORM STATE ---
   const [form, setForm] = useState({
     title: initialData?.title ?? "",
@@ -156,8 +160,11 @@ export default function PropertyForm({
         bathrooms: Number(form.bathrooms),
         cluster_id: form.cluster_id || null,
         location_id: form.location_id || null,
+        facilities: facilitiesInput
+          .split("\n")
+          .map((f: string) => f.trim())
+          .filter(Boolean),
       };
-
       // 1. SAVE PROPERTY TEXT
       let propertyId = initialData?.id;
       if (isEdit) {
@@ -509,6 +516,19 @@ export default function PropertyForm({
             />
           </div>
         </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-[#141422] mb-2">
+          Fasilitas & Akses Terdekat (Pisahkan dengan Enter)
+        </label>
+        <textarea
+          value={facilitiesInput}
+          onChange={(e) => setFacilitiesInput(e.target.value)}
+          rows={4}
+          placeholder="Contoh:&#10;10 Menit ke Tol Margonda&#10;5 Menit ke Stasiun Depok Baru&#10;Keamanan 24 Jam & CCTV"
+          className="w-full px-4 py-3 rounded-xl border border-[#E4E4F0] focus:border-[#343270] focus:ring-1 focus:ring-[#343270] outline-none transition-all text-[14px]"
+        />
       </div>
 
       {/* --- FOTO PROPERTI (Dipindah ke Sini) --- */}

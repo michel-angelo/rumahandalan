@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "../components/Footer";
+import AosInit from "@/components/AosInit";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.rumahandalan.com"),
@@ -54,6 +55,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className="font-sans antialiased" suppressHydrationWarning>
+        <AosInit />
         <Navbar />
         <main className="pt-16">{children}</main>
         <Footer />

@@ -18,9 +18,9 @@ const districts = [
 ];
 
 const propertyTypes = [
-  { value: "", label: "Semua Tipe" },
-  { value: "rumah", label: "Rumah" },
-  { value: "apartemen", label: "Apartemen" },
+  { value: "", label: "SEMUA TIPE" },
+  { value: "rumah", label: "RUMAH" },
+  { value: "apartemen", label: "APARTEMEN" },
 ];
 
 export default function HeroSearch() {
@@ -37,83 +37,77 @@ export default function HeroSearch() {
     router.push(`/listings?${params.toString()}`);
   }
 
+  // Class untuk input: kotak tegas, tanpa rounded, border tipis
+  const selectClass =
+    "flex-1 bg-transparent border-b sm:border-b-0 sm:border-r border-[#343270] px-4 py-4 text-white text-[12px] font-bold tracking-widest uppercase focus:outline-none focus:bg-[#343270]/20 appearance-none rounded-none cursor-pointer transition-colors";
+
   return (
-    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 max-w-3xl">
-      {/* Tipe Properti */}
-      <select
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-        className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white text-[14px] focus:outline-none focus:border-[#2E9AB8] transition-colors appearance-none"
-      >
-        {propertyTypes.map((t) => (
-          <option key={t.value} value={t.value} className="text-[#141422]">
-            {t.label}
-          </option>
-        ))}
-      </select>
-
-      {/* Lokasi */}
-      <select
-        value={district}
-        onChange={(e) => setDistrict(e.target.value)}
-        className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white text-[14px] focus:outline-none focus:border-[#2E9AB8] transition-colors appearance-none"
-      >
-        <option value="" className="text-[#141422]">
-          Semua Lokasi
-        </option>
-        {districts.map((d) => (
-          <option key={d} value={d} className="text-[#141422]">
-            {d}
-          </option>
-        ))}
-      </select>
-
-      {/* Max Harga */}
-      <select
-        value={maxPrice}
-        onChange={(e) => setMaxPrice(e.target.value)}
-        className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white text-[14px] focus:outline-none focus:border-[#2E9AB8] transition-colors appearance-none"
-      >
-        <option value="" className="text-[#141422]">
-          Semua Harga
-        </option>
-        <option value="300000000" className="text-[#141422]">
-          Maks. 300 Jt
-        </option>
-        <option value="500000000" className="text-[#141422]">
-          Maks. 500 Jt
-        </option>
-        <option value="750000000" className="text-[#141422]">
-          Maks. 750 Jt
-        </option>
-        <option value="1000000000" className="text-[#141422]">
-          Maks. 1 M
-        </option>
-        <option value="2000000000" className="text-[#141422]">
-          Maks. 2 M
-        </option>
-      </select>
-
-      {/* Button */}
-      <button
-        onClick={handleSearch}
-        className="px-6 py-3 bg-[#2E9AB8] hover:bg-[#2589a4] text-white font-semibold rounded-xl text-[14px] transition-colors flex items-center justify-center gap-2 shrink-0"
-      >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+    <div className="flex flex-col border border-[#343270] bg-[#1E1E40]">
+      {/* Baris Atas */}
+      <div className="flex flex-col sm:flex-row border-b border-[#343270]">
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className={selectClass}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-        Cari
-      </button>
+          {propertyTypes.map((t) => (
+            <option
+              key={t.value}
+              value={t.value}
+              className="bg-[#1E1E40] text-white"
+            >
+              {t.label}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={district}
+          onChange={(e) => setDistrict(e.target.value)}
+          className={selectClass}
+        >
+          <option value="" className="bg-[#1E1E40] text-white">
+            SEMUA LOKASI
+          </option>
+          {districts.map((d) => (
+            <option key={d} value={d} className="bg-[#1E1E40] text-white">
+              {d.toUpperCase()}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Baris Bawah */}
+      <div className="flex flex-col sm:flex-row">
+        <select
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+          className={selectClass}
+        >
+          <option value="" className="bg-[#1E1E40] text-white">
+            SEMUA HARGA
+          </option>
+          <option value="300000000" className="bg-[#1E1E40] text-white">
+            MAKS. 300 JT
+          </option>
+          <option value="500000000" className="bg-[#1E1E40] text-white">
+            MAKS. 500 JT
+          </option>
+          <option value="750000000" className="bg-[#1E1E40] text-white">
+            MAKS. 750 JT
+          </option>
+          <option value="1000000000" className="bg-[#1E1E40] text-white">
+            MAKS. 1 M
+          </option>
+        </select>
+
+        <button
+          onClick={handleSearch}
+          className="bg-[#2E9AB8] hover:bg-white text-white hover:text-[#1E1E40] px-8 py-4 font-bold text-[13px] uppercase tracking-[0.2em] transition-colors rounded-none w-full sm:w-auto flex-shrink-0"
+        >
+          CARI PROPERTI
+        </button>
+      </div>
     </div>
   );
 }

@@ -57,6 +57,7 @@ export type Property = {
   images?: PropertyImage[];
   is_promo: boolean;
   promo_labels: string[];
+  facilities: string[];
 };
 
 export type PropertyImage = {
