@@ -172,7 +172,7 @@ export default async function ClusterDetailPage({
                     <div className="relative aspect-[4/3] bg-[#F7F7FB] overflow-hidden">
                       {primaryImage ? (
                         <Image
-                          src={primaryImage.image_url}
+                          src={primaryImage.url}
                           alt={property.title}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
