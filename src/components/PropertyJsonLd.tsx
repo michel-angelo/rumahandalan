@@ -30,7 +30,7 @@ export default function PropertyJsonLd({ property }: { property: Property }) {
     },
     image: property.images
       ?.filter((img) => img.is_primary)
-      .map((img) => img.image_url),
+      .map((img) => img.url),
   };
 
   return (
