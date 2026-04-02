@@ -51,6 +51,10 @@ export default function PropertyForm({
     initialData?.facilities?.join("\n") || "",
   );
 
+  const [promosInput, setPromosInput] = useState(
+    initialData?.promo_labels?.join("\n") || "",
+  );
+
   // --- FORM STATE ---
   const [form, setForm] = useState({
     title: initialData?.title ?? "",
@@ -164,8 +168,13 @@ export default function PropertyForm({
           .split("\n")
           .map((f: string) => f.trim())
           .filter(Boolean),
+        promo_labels: form.is_promo
+          ? promosInput
+              .split("\n")
+              .map((p: string) => p.trim())
+              .filter(Boolean)
+          : [], // Kalau is_promo false, otomatis dikosongin
       };
-      // 1. SAVE PROPERTY TEXT
       let propertyId = initialData?.id;
       if (isEdit) {
         const { error } = await supabase
@@ -518,17 +527,21 @@ export default function PropertyForm({
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-semibold text-[#141422] mb-2">
-          Fasilitas & Akses Terdekat (Pisahkan dengan Enter)
-        </label>
-        <textarea
-          value={facilitiesInput}
-          onChange={(e) => setFacilitiesInput(e.target.value)}
-          rows={4}
-          placeholder="Contoh:&#10;10 Menit ke Tol Margonda&#10;5 Menit ke Stasiun Depok Baru&#10;Keamanan 24 Jam & CCTV"
-          className="w-full px-4 py-3 rounded-xl border border-[#E4E4F0] focus:border-[#343270] focus:ring-1 focus:ring-[#343270] outline-none transition-all text-[14px]"
-        />
+      {/* --- FASILITAS & AKSES --- */}
+      <div className={cardClass}>
+        <h2 className={titleClass}>Fasilitas & Akses</h2>
+        <div>
+          <label className={labelClass}>
+            Fasilitas & Akses Terdekat (Pisahkan dengan Enter)
+          </label>
+          <textarea
+            value={facilitiesInput}
+            onChange={(e) => setFacilitiesInput(e.target.value)}
+            rows={4}
+            placeholder="Contoh:&#10;10 Menit ke Tol Margonda&#10;5 Menit ke Stasiun Depok Baru&#10;Keamanan 24 Jam & CCTV"
+            className={inputClass}
+          />
+        </div>
       </div>
 
       {/* --- FOTO PROPERTI (Dipindah ke Sini) --- */}
@@ -546,30 +559,7 @@ export default function PropertyForm({
       {/* Opsi */}
       <div className={cardClass}>
         <h2 className={titleClass}>Opsi Tambahan</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          {[
-            { name: "is_featured", label: "Properti Unggulan" },
-            { name: "is_kpr", label: "KPR" },
-            { name: "is_cash_keras", label: "Cash Keras" },
-            { name: "is_subsidi", label: "Subsidi" },
-          ].map(({ name, label }) => (
-            <label
-              key={name}
-              className="flex items-center gap-2.5 cursor-pointer group"
-            >
-              <input
-                type="checkbox"
-                name={name}
-                checked={form[name as keyof typeof form] as boolean}
-                onChange={handleChange}
-                className="w-4 h-4 rounded border-white/20 bg-white/5 accent-[#2E9AB8] focus:ring-[#2E9AB8]"
-              />
-              <span className="text-[14px] text-[#EEEDF8] group-hover:text-white transition-colors">
-                {label}
-              </span>
-            </label>
-          ))}
-        </div>
+
         <div className="border-t border-white/[0.06] pt-5">
           <label className="flex items-center gap-2.5 cursor-pointer mb-4 group">
             <input
@@ -583,6 +573,22 @@ export default function PropertyForm({
               Properti Sedang Promo
             </span>
           </label>
+
+          {/* TEXTAREA MUNCUL OTOMATIS KALAU DICENTANG */}
+          {form.is_promo && (
+            <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+              <label className={labelClass}>
+                Daftar Promo (Pisahkan dengan Enter)
+              </label>
+              <textarea
+                value={promosInput}
+                onChange={(e) => setPromosInput(e.target.value)}
+                rows={3}
+                placeholder="Contoh:&#10;Free Biaya KPR & Surat-surat&#10;Kanopi Gratis&#10;Cashback 10 Juta"
+                className={inputClass}
+              />
+            </div>
+          )}
         </div>
       </div>
 
