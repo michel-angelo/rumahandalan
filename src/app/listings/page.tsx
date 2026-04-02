@@ -347,7 +347,7 @@ function PropertyShowcaseCard({
   isLarge?: boolean;
 }) {
   const primaryImg =
-    property.images?.find((img) => img.is_primary)?.image_url ??
+    property.images?.find((img) => img.is_primary)?.url ??
     "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80";
 
   // Status & Badges Config
