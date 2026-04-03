@@ -1,9 +1,11 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { DM_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AosInit from "@/components/AosInit";
+import { GoogleAnalytics } from "@next/third-parties/google"; // <-- 1. Import GA
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Rumah Andalan",
   },
   description:
-    "Agensi butik yang mengkurasi mahakarya arsitektur dan properti bernilai tinggi di Depok. Melayani dengan integritas, transparansi, dan standar tanpa kompromi.",
+    "Kami tim 4 orang yang sudah membantu 30+ keluarga menemukan rumah yang tepat di Depok sejak 2022. Tanpa mark-up, tanpa biaya tersembunyi.",
   keywords: [
     "properti premium depok",
     "rumah eksklusif depok",
@@ -37,7 +39,7 @@ export const metadata: Metadata = {
     siteName: "Rumah Andalan",
     title: "Rumah Andalan | Kurator Properti Eksklusif",
     description:
-      "Agensi butik yang mengkurasi mahakarya arsitektur dan properti bernilai tinggi di Depok.",
+      "Tim kurator properti Depok. 30+ transaksi selesai, pendampingan dari survei sampai AJB.",
     images: [
       {
         url: "/og-image.jpg",
@@ -51,12 +53,16 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Rumah Andalan | Kurator Properti Eksklusif",
     description:
-      "Agensi butik yang mengkurasi mahakarya arsitektur dan properti bernilai tinggi di Depok.",
+      "Tim kurator properti Depok. 30+ transaksi selesai, pendampingan dari survei sampai AJB.",
     images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
     follow: true,
+  },
+  // 2. TAMBAHKAN META VERIFIKASI GOOGLE SEARCH CONSOLE DI SINI
+  verification: {
+    google: "3zIB7Wo09DzzyWvZHFysesxTZvQ78Z-a0aMQhUTe9BA",
   },
 };
 
@@ -76,6 +82,9 @@ export default function RootLayout({
         {/* Hapus class pt-20 karena halaman (page.tsx) sudah mengatur padding/margin secara individual */}
         <main>{children}</main>
         <Footer />
+
+        {/* 3. PASANG SCRIPT GOOGLE ANALYTICS DI SINI */}
+        <GoogleAnalytics gaId="G-2XSM5XF1BY" />
       </body>
     </html>
   );
