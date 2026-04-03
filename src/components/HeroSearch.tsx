@@ -90,10 +90,11 @@ export default function HeroSearch() {
             className={selectClass}
           >
             <option value="">Tanpa Batasan</option>
-            <option value="500000000">Rp 500 Juta</option>
-            <option value="1000000000">Rp 1 Miliar</option>
-            <option value="2000000000">Rp 2 Miliar</option>
-            <option value="5000000000">Rp 5 Miliar</option>
+            <option value="500000000">Maks Rp 500 Juta</option>
+            <option value="1000000000">Maks Rp 1 Miliar</option>
+            <option value="2000000000">Maks Rp 2 Miliar</option>
+            <option value="3000000000">Maks Rp 3 Miliar</option>
+            <option value="5000000000">Maks Rp 5 Miliar</option>
           </select>
         </div>
       </div>

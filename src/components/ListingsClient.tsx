@@ -14,7 +14,13 @@ function formatPrice(price: number) {
 }
 
 // ─── Property Card (Editorial Style) ──────────────────────────────────────────
-function PropertyCard({ property }: { property: Property }) {
+function PropertyCard({
+  property,
+  priority = false,
+}: {
+  property: Property;
+  priority?: boolean;
+}) {
   const primaryImage =
     property.images?.find((img) => img.is_primary) ?? property.images?.[0];
   const isSold = property.status === "terjual" || property.status === "booked";
@@ -30,13 +36,29 @@ function PropertyCard({ property }: { property: Property }) {
             src={primaryImage.url}
             alt={property.title}
             fill
-            className={`object-cover transition-transform duration-[2s] ease-out group-hover:scale-105 ${isSold ? "grayscale opacity-70" : ""}`}
+            className={`object-cover transition-transform duration-[2s] ease-out group-hover:scale-105 ${
+              isSold ? "grayscale opacity-70" : ""
+            }`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={priority}
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-border-light">
-            <span className="text-text-muted text-[10px] uppercase tracking-widest font-bold">
-              Tak Ada Gambar
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-bg-surface to-border-light">
+            <svg
+              className="w-10 h-10 text-text-primary/10 mb-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="square"
+                strokeLinejoin="miter"
+                strokeWidth={1}
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
+            <span className="text-text-primary/30 text-[10px] uppercase tracking-[0.3em] font-bold">
+              Rumah Andalan
             </span>
           </div>
         )}
@@ -194,7 +216,6 @@ export default function ListingsClient({
         </div>
       </div>
 
-      {/* Filter Panel (Sleek, No Box Shadows) */}
       {showFilter && (
         <div
           data-aos="fade-down"
@@ -234,10 +255,12 @@ export default function ListingsClient({
               onChange={(e) => setMaxPrice(e.target.value)}
               className={selectClass}
             >
-              <option value="">Semua</option>
-              <option value="500000000">500 Juta</option>
-              <option value="1000000000">1 Miliar</option>
-              <option value="3000000000">3 Miliar</option>
+              <option value="">Semua Harga</option>
+              <option value="500000000">Maks Rp 500 Juta</option>
+              <option value="1000000000">Maks Rp 1 Miliar</option>
+              <option value="2000000000">Maks Rp 2 Miliar</option>
+              <option value="3000000000">Maks Rp 3 Miliar</option>
+              <option value="5000000000">Maks Rp 5 Miliar</option>
             </select>
           </div>
           <div>
@@ -280,15 +303,36 @@ export default function ListingsClient({
           ))}
         </div>
       ) : (
-        <div className="text-center py-32" data-aos="fade-in">
-          <p className="font-display text-3xl text-text-muted mb-4 italic">
-            Pencarian tidak membuahkan hasil.
+        <div
+          className="flex flex-col items-center justify-center py-32 px-5 text-center bg-bg-surface border border-text-primary/10"
+          data-aos="fade-in"
+        >
+          <svg
+            className="w-16 h-16 text-text-primary/20 mb-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              strokeWidth={1}
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            />
+          </svg>
+          <h3 className="font-display text-3xl md:text-4xl text-text-primary mb-4">
+            Koleksi <span className="italic text-accent">Belum Tersedia.</span>
+          </h3>
+          <p className="text-text-secondary font-body max-w-md mx-auto mb-8">
+            Kami belum menemukan properti yang sesuai dengan kriteria spesifik
+            Anda. Coba sesuaikan filter pencarian atau jelajahi seluruh koleksi
+            kami.
           </p>
           <button
             onClick={resetFilters}
-            className="text-[12px] font-bold uppercase tracking-widest text-text-primary border-b border-text-primary pb-1 hover:text-accent hover:border-accent transition-colors"
+            className="px-8 py-4 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent transition-colors"
           >
-            Kembali ke Semua Koleksi
+            Tampilkan Semua Properti
           </button>
         </div>
       )}

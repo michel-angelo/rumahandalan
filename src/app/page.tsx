@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import { supabase } from "@/lib/supabase";
 import { Property, Cluster } from "@/types";
 import Link from "next/link";
@@ -57,7 +58,13 @@ function formatPrice(price: number) {
 
 // ─── Sub-components (Editorial Style) ────────────────────────────────────────
 
-function PropertyCard({ property }: { property: Property }) {
+function PropertyCard({
+  property,
+  priority = false,
+}: {
+  property: Property;
+  priority?: boolean;
+}) {
   const primaryImage =
     property.images?.find((img) => img.is_primary) ?? property.images?.[0];
   const isSold = property.status === "terjual" || property.status === "booked";
@@ -77,6 +84,7 @@ function PropertyCard({ property }: { property: Property }) {
               isSold ? "grayscale opacity-70" : ""
             }`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={priority}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-border-light">
@@ -176,7 +184,7 @@ export default async function Home() {
               data-aos="fade-up"
               className="text-[10px] font-body font-bold uppercase tracking-[0.4em] text-accent mb-6 border-l border-accent pl-4"
             >
-              Properti Depok & Sekitarnya
+              Sejak 2022 · Depok & Sekitarnya
             </p>
 
             <h1
@@ -193,9 +201,9 @@ export default async function Home() {
               data-aos-delay="200"
               className="font-body text-lg text-text-secondary leading-relaxed max-w-md mb-12"
             >
-              Kami menyeleksi rumah dan cluster dengan legalitas aman, lokasi
-              strategis, dan harga yang transparan. Tanpa mark-up, tanpa biaya
-              tersembunyi.
+              Sudah 30+ keluarga kami bantu menemukan rumah yang benar-benar
+              cocok di Depok. Kami periksa legalitas, negosiasi harga, dan
+              dampingi sampai kunci di tangan Anda.
             </p>
 
             <div
@@ -213,13 +221,21 @@ export default async function Home() {
             data-aos-duration="1500"
           >
             <div className="absolute inset-0 bg-accent-wash translate-x-4 -translate-y-4 lg:translate-x-8 lg:-translate-y-8"></div>
-            <Image
-              src={heroImage || "/og-image.jpg"}
-              alt="Interior arsitektur elegan"
-              fill
-              className="object-cover relative z-10"
-              priority
-            />
+            <div
+              className="lg:col-span-7 relative h-[50vh] lg:h-[80vh] w-full order-1 lg:order-2"
+              data-aos="fade-left"
+              data-aos-duration="1500"
+            >
+              <div className="absolute inset-0 bg-accent-wash translate-x-4 -translate-y-4 lg:translate-x-8 lg:-translate-y-8"></div>
+              <Image
+                src={heroImage || "/og-image.jpg"}
+                alt="Interior arsitektur elegan"
+                fill
+                className="object-cover relative z-10"
+                priority // <-- Sangat krusial untuk Hero Image
+                sizes="(max-width: 1024px) 100vw, 60vw" // Tambahkan sizes biar LCP makin ngebut
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -252,7 +268,8 @@ export default async function Home() {
               data-aos="fade-up"
               data-aos-delay={index * 100}
             >
-              <PropertyCard property={property} />
+              {/* Beri priority pada 3 kartu pertama */}
+              <PropertyCard property={property} priority={index < 3} />
             </div>
           ))}
         </div>
@@ -264,15 +281,16 @@ export default async function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             <div className="lg:col-span-4" data-aos="fade-right">
               <p className="text-accent-tint text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
-                Nilai Kerja Kami
+                Cara Kami Bekerja
               </p>
               <h2 className="font-display text-4xl lg:text-5xl leading-tight mb-6">
-                Fokus Pada <br />
-                <span className="italic font-light">Keamanan Transaksi.</span>
+                Setiap Langkah <br />
+                <span className="italic font-light">Ada Orangnya.</span>
               </h2>
               <p className="text-accent-tint/80 text-[15px] leading-relaxed">
                 Membeli properti adalah keputusan besar. Kami mendampingi Anda
-                memastikan setiap aspek legal dan finansial berjalan aman.
+                memastikan setiap aspek legal, finansial berjalan aman, dan
+                mengambil keputusan dengan benar.
               </p>
             </div>
 
@@ -331,16 +349,20 @@ export default async function Home() {
             Jadwalkan Kunjungan
           </p>
           <h2 className="font-display text-5xl md:text-6xl text-text-primary mb-10 leading-tight">
-            Mulai Pencarian <br className="hidden sm:block" />{" "}
-            <span className="italic text-accent">Properti Anda.</span>
+            Belum Tahu Mau <br className="hidden sm:block" />{" "}
+            <span className="italic text-accent">Cari yang Seperti Apa?</span>
           </h2>
+          <p className="text-text-secondary text-[15px] leading-relaxed mb-10 max-w-md mx-auto">
+            Justru itu titik awalnya. Ceritakan situasi Anda — anggaran, lokasi,
+            kebutuhan — dan kami bantu persempit pilihannya.
+          </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link
-              href="https://wa.me/6281234567890"
+              href="https://wa.me/6282116207400"
               target="_blank"
               className="px-8 py-4 bg-accent text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-text-primary transition-colors"
             >
-              Hubungi via WhatsApp
+              Mulai Konsultasi GRATIS!
             </Link>
             <Link
               href="/listings"

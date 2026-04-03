@@ -26,13 +26,14 @@ export default function PropertyGallery({ images }: { images: ImageType[] }) {
       {/* ── GAMBAR SUPER (UTAMA) ── */}
       <div className="relative w-full aspect-[4/3] lg:aspect-[16/9] bg-bg-surface overflow-hidden transition-all duration-700">
         <Image
-          key={activeUrl} // Memaksa re-render untuk mentrigger animasi CSS
+          key={activeUrl}
           src={activeUrl}
           alt="Kurasi Visual Properti"
           fill
           priority
-          className="object-cover animate-fade-in"
+          className="object-contain animate-fade-in"
           sizes="(max-width: 1024px) 100vw, 66vw"
+          quality={85}
         />
       </div>
 

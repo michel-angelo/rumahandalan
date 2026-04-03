@@ -49,7 +49,7 @@ export default function Navbar() {
               href="/contact"
               className="ml-4 px-8 py-3.5 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-accent transition-colors"
             >
-              Konsultasi Privat
+              Konsultasi Gratis
             </Link>
           </div>
 
@@ -76,7 +76,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Fullscreen Overlay */}
       <div
-        className={`md:hidden absolute top-24 left-0 w-full bg-bg-page border-b border-text-primary/10 transition-all duration-500 overflow-hidden ${isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}
+        className={`md:hidden fixed top-24 left-0 w-full h-[calc(100vh-6rem)] bg-bg-page border-t border-text-primary/10 transition-all duration-500 overflow-y-auto ${isOpen ? "translate-x-0 opacity-100 visible" : "translate-x-full opacity-0 invisible"}`}
       >
         <div className="px-5 py-8 flex flex-col gap-6">
           <Link
@@ -114,7 +114,7 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
               className="block w-full text-center py-4 bg-text-primary text-bg-page text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-accent transition-colors"
             >
-              Konsultasi Privat
+              Konsultasi Gratis
             </Link>
           </div>
         </div>

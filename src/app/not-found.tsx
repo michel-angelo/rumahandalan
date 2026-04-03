@@ -1,31 +1,34 @@
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="bg-[#F7F7FB] min-h-screen flex items-center justify-center px-5">
+    <div className="bg-bg-page min-h-screen flex items-center justify-center px-5 pt-20">
       <div className="text-center max-w-md">
-        <p className="font-serif text-[120px] font-bold text-[#E4E4F0] leading-none">404</p>
-        <h1 className="font-serif text-[#141422] text-2xl font-bold mb-3 -mt-4">
-          Halaman Tidak Ditemukan
-        </h1>
-        <p className="text-[#5A5A78] text-[15px] leading-relaxed mb-8">
-          Halaman yang Anda cari tidak ada atau sudah dipindahkan.
+        <p className="font-display text-[120px] font-light text-text-primary/10 leading-none mb-4">
+          404
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <h1 className="font-display text-text-primary text-3xl mb-4">
+          Halaman <span className="italic text-accent">Tidak Ditemukan.</span>
+        </h1>
+        <p className="text-text-secondary text-[15px] leading-relaxed font-body mb-10">
+          Koleksi yang Anda cari mungkin telah terjual atau halamannya sudah
+          dipindahkan.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"
-            className="px-6 py-3 bg-[#343270] text-white rounded-xl font-semibold text-[14px] hover:bg-[#2E9AB8] transition-colors"
+            className="px-8 py-4 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent transition-colors"
           >
-            Kembali ke Home
+            Beranda
           </Link>
           <Link
             href="/listings"
-            className="px-6 py-3 border border-[#E4E4F0] text-[#343270] rounded-xl font-semibold text-[14px] hover:border-[#343270] transition-colors"
+            className="px-8 py-4 border border-text-primary text-text-primary text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-text-primary hover:text-white transition-colors"
           >
-            Lihat Properti
+            Lihat Koleksi
           </Link>
         </div>
       </div>
     </div>
-  )
+  );
 }
