@@ -5,19 +5,23 @@ import Link from "next/link";
 import PropertyJsonLd from "@/components/PropertyJsonLd";
 import PropertyGallery from "@/components/PropertyGallery";
 import Image from "next/image";
+import { cache } from "react";
 
-async function getProperty(slug: string) {
+const getProperty = cache(async (slug: string) => {
   const { data, error } = await supabase
     .from("properties")
     .select(
       "*, cluster:clusters(*), location:locations(*), images:property_images(*)",
     )
     .eq("slug", slug)
-    .single();
+    .maybeSingle();
 
-  if (error) console.error("Error fetching property:", error);
+  if (error && error.code !== "PGRST116") {
+    console.error("Error fetching property:", error);
+  }
+
   return data as Property | null;
-}
+});
 
 async function getRelatedProperties(property: Property) {
   const { data } = await supabase
@@ -76,8 +80,9 @@ export default async function PropertyDetailPage({
   const otherImgs = rawImages.filter((img) => !img.is_primary);
   const allImages = primaryImg ? [primaryImg, ...otherImgs] : otherImgs;
 
+  const propertyUrl = `https://www.rumahandalan.com/listings/${property.slug}`;
   const waMessage = encodeURIComponent(
-    `Halo, saya ingin menjadwalkan kunjungan atau mendapat info lebih lanjut terkait properti *${property.title}*.`,
+    `Halo Rumah Andalan, saya tertarik dengan properti *${property.title}*.\n\nLink: ${propertyUrl}\n\nApakah saya bisa menjadwalkan kunjungan?`,
   );
   const waLink = `https://wa.me/${property.whatsapp_number}?text=${waMessage}`;
 
@@ -356,9 +361,9 @@ export default async function PropertyDetailPage({
           href={waLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-6 py-3 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.2em]"
+          className="px-6 py-3 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap"
         >
-          Tanya WA
+          Hubungi Kami
         </a>
       </div>
 

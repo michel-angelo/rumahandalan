@@ -3,15 +3,19 @@ import { Property, Cluster } from "@/types";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { cache } from "react";
 
-async function getCluster(slug: string) {
-  const { data } = await supabase
+const getCluster = cache(async (slug: string) => {
+  const { data, error } = await supabase
     .from("clusters")
     .select("*, images:cluster_images(*)")
     .eq("slug", slug)
-    .single();
+    .maybeSingle();
+  if (error && error.code !== "PGRST116") {
+    console.error("Error fetching cluster:", error);
+  }
   return data as Cluster | null;
-}
+});
 
 async function getClusterProperties(clusterId: string) {
   const { data } = await supabase
@@ -56,7 +60,7 @@ export default async function ClusterDetailPage({
   const coverImage =
     cluster.images?.find((img) => img.is_primary) ?? cluster.images?.[0];
 
-  const waLink = `https://wa.me/6281234567890?text=${encodeURIComponent(`Halo, saya ingin menjadwalkan kunjungan untuk melihat cluster *${cluster.name}*.`)}`;
+  const waLink = `https://wa.me/6282116207400?text=${encodeURIComponent(`Halo, saya ingin menjadwalkan kunjungan untuk melihat cluster *${cluster.name}*.`)}`;
 
   return (
     <div className="bg-bg-page min-h-screen pt-24 pb-32">

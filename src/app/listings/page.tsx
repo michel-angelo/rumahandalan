@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 // Disable caching untuk halaman listings agar data selalu fresh
-export const revalidate = 0;
+export const revalidate = 60;
 
 // ─── DATA FETCHING ───────────────────────────────────────────────────────────
 export default async function ListingsPage() {
