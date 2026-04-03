@@ -31,6 +31,12 @@ export const metadata: Metadata = {
     "kurator properti",
     "agen properti depok",
     "rumah andalan",
+    "rumah 300 jutaan depok",
+    "rumah milenial depok",
+    "rumah minimalis modern depok",
+    "rumah pertama depok",
+    "properti terjangkau depok",
+    "rumah kpr depok",
   ],
   openGraph: {
     type: "website",

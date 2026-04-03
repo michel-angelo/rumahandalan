@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: "/admin",
+        disallow: ["/admin/", "/admin/*", "/api/", "/_next/"],
       },
     ],
     sitemap: "https://www.rumahandalan.com/sitemap.xml",
