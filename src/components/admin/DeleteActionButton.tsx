@@ -24,6 +24,21 @@ export default function DeleteActionButton({ table, id, itemName }: Props) {
     const supabase = createSupabaseBrowserClient();
 
     try {
+      if (table === "clusters") {
+        const { data: clusterData } = await supabase
+          .from("clusters")
+          .select("image_url")
+          .eq("id", id)
+          .single();
+
+        if (clusterData?.image_url) {
+          const parts = clusterData.image_url.split("/property-images/");
+          if (parts.length > 1) {
+            await supabase.storage.from("property-images").remove([parts[1]]);
+          }
+        }
+      }
+
       const { error } = await supabase.from(table).delete().eq("id", id);
 
       if (error) throw error;

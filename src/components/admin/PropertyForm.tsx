@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import toast from "react-hot-toast";
 import ImageUploader, { PendingImage, UploadedImage } from "./ImageUploader";
+import imageCompression from "browser-image-compression";
 
 type Cluster = { id: string; name: string };
 type Location = { id: string; district: string; city: string };
@@ -98,15 +99,46 @@ export default function PropertyForm({
   }
 
   // --- IMAGE HANDLERS ---
-  function handleFilesSelected(files: FileList) {
-    const newPending = Array.from(files).map((file, i) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      // Jadikan primary kalau ini gambar pertama kali yang dimasukkan
-      is_primary:
-        existingImages.length === 0 && pendingImages.length === 0 && i === 0,
-    }));
-    setPendingImages((prev) => [...prev, ...newPending]);
+  // --- IMAGE HANDLERS ---
+  async function handleFilesSelected(files: FileList) {
+    // Tampilkan loading toast biar admin tau lagi proses kompresi kalau fotonya banyak
+    const loadingToast = toast.loading("Mengompresi foto...");
+
+    try {
+      const options = {
+        maxSizeMB: 0.5, // Maksimal ukuran file 500KB
+        maxWidthOrHeight: 1920, // Dimensi maksimal 1920px (Standar HD)
+        useWebWorker: true, // Biar browser gak nge-lag saat kompresi
+      };
+
+      const compressedFiles = await Promise.all(
+        Array.from(files).map(async (file) => {
+          try {
+            // Kompresi file
+            const compressedFile = await imageCompression(file, options);
+            return compressedFile;
+          } catch (error) {
+            console.error("Gagal kompres foto:", error);
+            return file; // Kalau gagal, fallback pakai foto asli
+          }
+        }),
+      );
+
+      const newPending = compressedFiles.map((file, i) => ({
+        file: file as File,
+        preview: URL.createObjectURL(file),
+        // Jadikan primary kalau ini gambar pertama kali yang dimasukkan
+        is_primary:
+          existingImages.length === 0 && pendingImages.length === 0 && i === 0,
+      }));
+
+      setPendingImages((prev) => [...prev, ...newPending]);
+      toast.success("Foto siap diupload!", { id: loadingToast });
+    } catch (error) {
+      toast.error("Terjadi kesalahan saat memproses foto", {
+        id: loadingToast,
+      });
+    }
   }
 
   function handleSetPrimary(type: "existing" | "pending", index: number) {
