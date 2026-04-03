@@ -5,12 +5,12 @@ import { Metadata } from "next";
 
 // ─── SEO METADATA ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "Jelajahi Properti | Rumah Andalan",
+  title: "Koleksi Kurasi Properti | Rumah Andalan",
   description:
-    "Cari dan temukan rumah, apartemen, serta hunian impian Anda di kawasan Depok dan sekitarnya dengan penawaran terbaik.",
+    "Eksplorasi portofolio hunian pilihan di kawasan Depok. Kami menyeleksi properti dengan legalitas aman, spesifikasi solid, dan nilai investasi yang logis.",
 };
 
-// Disable caching untuk halaman listings agar data selalu fresh (Opsional, tapi disarankan untuk web properti)
+// Disable caching untuk halaman listings agar data selalu fresh
 export const revalidate = 0;
 
 // ─── DATA FETCHING ───────────────────────────────────────────────────────────
@@ -34,13 +34,14 @@ export default async function ListingsPage() {
     supabase.from("clusters").select("*").order("name", { ascending: true }),
   ]);
 
-  // Kalau mau ada error logging di server (terminal)
+  // Logging error di server
   if (propError) console.error("Error fetching properties:", propError);
   if (locError) console.error("Error fetching locations:", locError);
   if (clusError) console.error("Error fetching clusters:", clusError);
 
   return (
-    <main className="bg-[#F7F7FB]">
+    // Memastikan background menggunakan warna tema eksklusif kita
+    <main className="bg-bg-page min-h-screen">
       <ListingsClient
         properties={(properties as Property[]) ?? []}
         locations={(locations as Location[]) ?? []}

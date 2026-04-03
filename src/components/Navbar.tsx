@@ -7,17 +7,21 @@ import Image from "next/image";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Class untuk link navigasi editorial
+  const navLinkClass =
+    "text-text-primary text-[10px] font-bold uppercase tracking-[0.2em] hover:text-accent transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-accent hover:after:w-full after:transition-all after:duration-300";
+
   return (
-    <nav className="fixed w-full z-50 bg-[#1E1E40] border-b border-[#343270] transition-all duration-300">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo Placeholder (Otomatis Menyesuaikan) */}
+    <nav className="fixed w-full z-50 bg-bg-page/80 backdrop-blur-md border-b border-text-primary/10 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="flex justify-between items-center h-24">
+          {/* Logo Placeholder */}
           <Link
             href="/"
             className="relative block h-8 sm:h-10 w-[160px] sm:w-[200px] flex-shrink-0"
           >
             <Image
-              src="/logo-nav.png" // Taruh file logo-nav.png di folder /public
+              src="/logo-nav.png"
               alt="Logo Rumah Andalan"
               fill
               className="object-contain object-left"
@@ -25,122 +29,96 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Desktop Menu (Editorial Typography) */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link
-              href="/"
-              className="text-white text-[11px] font-bold uppercase tracking-widest hover:text-[#2E9AB8] transition-colors"
-            >
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-10">
+            <Link href="/" className={navLinkClass}>
               Beranda
             </Link>
-            <Link
-              href="/listings"
-              className="text-white text-[11px] font-bold uppercase tracking-widest hover:text-[#2E9AB8] transition-colors"
-            >
-              Properti
+            <Link href="/listings" className={navLinkClass}>
+              Koleksi Properti
             </Link>
-            <Link
-              href="/clusters"
-              className="text-white text-[11px] font-bold uppercase tracking-widest hover:text-[#2E9AB8] transition-colors"
-            >
-              Cluster
+            <Link href="/clusters" className={navLinkClass}>
+              Eksplorasi Cluster
             </Link>
-            <Link
-              href="/about"
-              className="text-white text-[11px] font-bold uppercase tracking-widest hover:text-[#2E9AB8] transition-colors"
-            >
-              Tentang Kami
+            <Link href="/about" className={navLinkClass}>
+              Filosofi Kami
             </Link>
 
-            {/* CTA Button Kaku */}
+            {/* CTA Button Editorial (Tajam, tanpa border radius) */}
             <Link
               href="/contact"
-              className="px-6 py-2.5 bg-[#2E9AB8] text-white text-[11px] font-bold uppercase tracking-widest border border-transparent hover:border-white hover:shadow-[4px_4px_0px_white] hover:-translate-y-0.5 transition-all"
+              className="ml-4 px-8 py-3.5 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-accent transition-colors"
             >
-              Hubungi Kami
+              Konsultasi Privat
             </Link>
           </div>
 
-          {/* Mobile Menu Button (Ikon Garis Tajam) */}
+          {/* Mobile Menu Button (Minimalist Icon) */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white hover:text-[#2E9AB8] transition-colors"
+            className="md:hidden text-text-primary focus:outline-none"
+            aria-label="Toggle Menu"
           >
-            {isOpen ? (
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="square"
-                  strokeLinejoin="miter"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="square"
-                  strokeLinejoin="miter"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
+            <div className="flex flex-col gap-1.5 w-7 items-end">
+              <span
+                className={`block h-[1px] bg-text-primary transition-all duration-300 ${isOpen ? "w-7 rotate-45 translate-y-[7px]" : "w-7"}`}
+              ></span>
+              <span
+                className={`block h-[1px] bg-text-primary transition-all duration-300 ${isOpen ? "opacity-0" : "w-5"}`}
+              ></span>
+              <span
+                className={`block h-[1px] bg-text-primary transition-all duration-300 ${isOpen ? "w-7 -rotate-45 -translate-y-[7px]" : "w-7"}`}
+              ></span>
+            </div>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {isOpen && (
-        <div className="md:hidden bg-[#1E1E40] border-t border-[#343270]">
-          <div className="px-5 pt-4 pb-6 flex flex-col gap-4">
-            <Link
-              href="/"
-              onClick={() => setIsOpen(false)}
-              className="text-white text-[12px] font-bold uppercase tracking-widest border-b border-[#343270] pb-3"
-            >
-              Beranda
-            </Link>
-            <Link
-              href="/listings"
-              onClick={() => setIsOpen(false)}
-              className="text-white text-[12px] font-bold uppercase tracking-widest border-b border-[#343270] pb-3"
-            >
-              Properti
-            </Link>
-            <Link
-              href="/clusters"
-              onClick={() => setIsOpen(false)}
-              className="text-white text-[12px] font-bold uppercase tracking-widest border-b border-[#343270] pb-3"
-            >
-              Cluster
-            </Link>
-            <Link
-              href="/about"
-              onClick={() => setIsOpen(false)}
-              className="text-white text-[12px] font-bold uppercase tracking-widest border-b border-[#343270] pb-3"
-            >
-              Tentang Kami
-            </Link>
+      {/* Mobile Menu Fullscreen Overlay */}
+      <div
+        className={`md:hidden absolute top-24 left-0 w-full bg-bg-page border-b border-text-primary/10 transition-all duration-500 overflow-hidden ${isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}
+      >
+        <div className="px-5 py-8 flex flex-col gap-6">
+          <Link
+            href="/"
+            onClick={() => setIsOpen(false)}
+            className="font-display text-2xl text-text-primary hover:text-accent"
+          >
+            Beranda
+          </Link>
+          <Link
+            href="/listings"
+            onClick={() => setIsOpen(false)}
+            className="font-display text-2xl text-text-primary hover:text-accent"
+          >
+            Koleksi Properti
+          </Link>
+          <Link
+            href="/clusters"
+            onClick={() => setIsOpen(false)}
+            className="font-display text-2xl text-text-primary hover:text-accent"
+          >
+            Eksplorasi Cluster
+          </Link>
+          <Link
+            href="/about"
+            onClick={() => setIsOpen(false)}
+            className="font-display text-2xl text-text-primary hover:text-accent"
+          >
+            Filosofi Kami
+          </Link>
+
+          <div className="mt-8 pt-8 border-t border-text-primary/10">
             <Link
               href="/contact"
               onClick={() => setIsOpen(false)}
-              className="mt-2 text-center px-6 py-3 bg-[#2E9AB8] text-white text-[12px] font-bold uppercase tracking-widest border border-transparent active:border-white active:shadow-[4px_4px_0px_white] transition-all"
+              className="block w-full text-center py-4 bg-text-primary text-bg-page text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-accent transition-colors"
             >
-              Hubungi Kami
+              Konsultasi Privat
             </Link>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 }

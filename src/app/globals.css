@@ -1,27 +1,88 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Backgrounds (Tetap Cream/Oat yang Elegan) */
+  --color-bg-hero: #f4f0e8;
+  --color-bg-page: #faf7f2;
+  --color-bg-surface: #ede8df;
+  --color-bg-card: #ffffff;
+
+  /* Accent (Deep Forest Green - Kontras Tajam & Super Mewah) */
+  --color-accent: #2a4032;
+  --color-accent-dark: #18261d;
+  --color-accent-light: #5c7a65;
+  --color-accent-tint: #e5ebe7;
+  --color-accent-wash: rgba(42, 64, 50, 0.08);
+
+  /* Typography Colors */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-muted: #7a7a7a;
+  --color-text-placeholder: #aaa49a;
+
+  /* Borders */
+  --color-border: #e0dbd2;
+  --color-border-light: #f0ece4;
+  --color-border-dark: #d8d0c4;
+
+  /* Radius (Dinonaktifkan agar desain kaku elegan tajam) */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-pill: 0px;
+
+  /* Shadows (Dibuat flat) */
+  --shadow-card: none;
+  --shadow-search: none;
+
+  /* Fonts */
+  --font-display: var(--font-lora), serif;
+  --font-body: var(--font-dm-sans), sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--color-bg-page);
+    color: var(--color-text-primary);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+/* ── CUSTOM ANIMATIONS UNTUK GALLERY & ABOUT PAGE ── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Hide scrollbar for thumbnails */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
