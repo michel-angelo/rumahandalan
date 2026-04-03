@@ -1,7 +1,16 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
+import { SITE_CONFIG } from "@/lib/constants";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/promo")) {
+    return null;
+  }
+
   return (
     <footer className="bg-text-primary pt-24 pb-12 text-bg-page">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -67,7 +76,7 @@ export default function Footer() {
               <ul className="flex flex-col gap-4">
                 <li>
                   <a
-                    href="https://wa.me/6282116207400"
+                    href="https://wa.me/${SITE_CONFIG.whatsappNumber}"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[13px] text-white/70 hover:text-white transition-colors"

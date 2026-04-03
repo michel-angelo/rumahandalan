@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_CONFIG } from "@/lib/constants";
 
 export const metadata = {
   title: "Kontak | Rumah Andalan",
@@ -6,7 +7,7 @@ export const metadata = {
 };
 
 export default function ContactPage() {
-  const waLink = `https://wa.me/6282116207400?text=${encodeURIComponent(
+  const waLink = `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(
     "Halo, saya ingin konsultasi properti dengan Rumah Andalan.",
   )}`;
 

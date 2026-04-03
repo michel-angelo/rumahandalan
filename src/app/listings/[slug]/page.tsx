@@ -57,10 +57,28 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const property = await getProperty(slug);
+
   if (!property) return { title: "Properti Tidak Ditemukan" };
+
+  // Cari gambar primary untuk dijadikan thumbnail saat di-share
+  const primaryImg =
+    property.images?.find((img) => img.is_primary) ?? property.images?.[0];
+  const imageUrl = primaryImg?.url ?? "/og-image.jpg";
+
   return {
     title: `${property.title} | Kurasi Rumah Andalan`,
     description: property.description,
+    openGraph: {
+      title: `${property.title} | Rumah Andalan`,
+      description: property.description,
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${property.title} | Rumah Andalan`,
+      description: property.description,
+      images: [imageUrl],
+    },
   };
 }
 

@@ -4,6 +4,7 @@ import { Property, Cluster } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
 import HeroSearch from "@/components/HeroSearch";
+import { SITE_CONFIG } from "@/lib/constants";
 
 // ─── Data Fetchers ────────────────────────────────────────────────────────────
 
@@ -358,7 +359,7 @@ export default async function Home() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link
-              href="https://wa.me/6282116207400"
+              href="https://wa.me/${SITE_CONFIG.whatsappNumber}"
               target="_blank"
               className="px-8 py-4 bg-accent text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-text-primary transition-colors"
             >
