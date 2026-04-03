@@ -1,59 +1,58 @@
+//src/app/about/page.tsx
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// ─── Data Kurasi Tim & Kegiatan ──────────────────────────────────────────────
-// Anda tinggal ganti teks dan path gambarnya nanti
 const galleryData = [
   {
     id: "agency",
-    image: "/about-team.jpg", // Ganti dengan foto tim berempat
+    image: "/about-team.jpg",
     title: "Rumah Andalan",
-    subtitle: "Kurator Properti Depok",
+    subtitle: "Kurator Properti · Depok",
     description:
-      "Membeli rumah adalah keputusan finansial terbesar dalam hidup. Kami didirikan dari kegelisahan atas industri properti yang abu-abu. Kami berempat bukan sekadar agen; kami adalah kurator, negosiator, dan pelindung legalitas Anda. Kami bekerja dalam tim kecil agar setiap klien mendapatkan pendampingan yang intens, privat, dan tanpa kompromi.",
+      "Kami mulai dari satu orang yang tidak puas dengan cara industri properti bekerja. Harga yang tidak transparan, agen yang menghilang setelah tanda tangan, dokumen yang tidak pernah benar-benar dijelaskan. Abdullah mulai sendiri di 2022. Di 2025, Kim, Aji, dan Basthatan bergabung. Kini kami berempat — dan sudah membantu lebih dari 30 keluarga menemukan rumah yang memang cocok untuk mereka.",
   },
   {
     id: "founder",
-    image: "/about-person1.jpg", // Ganti dengan foto Anda
-    title: "Nama Anda",
-    subtitle: "Principal & Kurator Utama",
+    image: "/about-person1.jpg",
+    title: "Abdullah Ridwan",
+    subtitle: "Founder · Kurator Utama",
     description:
-      "Mendedikasikan waktunya untuk menyeleksi properti dengan standar ketat. Memastikan setiap rumah yang masuk ke dalam katalog kami tidak hanya memiliki estetika yang baik, tapi juga struktur bangunan yang solid dan nilai investasi yang logis.",
+      "Abdullah yang memulai semuanya — sendirian, survei sendiri, negosiasi sendiri, urus KPR sendiri. Dari proses itu ia belajar di mana biasanya transaksi properti mulai bermasalah. Sekarang ia yang menetapkan standar: properti seperti apa yang layak masuk katalog, dan mana yang tidak.",
   },
   {
     id: "person2",
-    image: "/about-person2.jpg", // Ganti dengan foto tim ke-2
-    title: "Nama Anggota 2",
-    subtitle: "Pakar Legalitas & KPR",
+    image: "/about-person2.jpg",
+    title: "Kim Arvino",
+    subtitle: "Legalitas & KPR",
     description:
-      "Garis pertahanan pertama kami melawan sengketa hukum. Bertanggung jawab membedah sertifikat (SHM/SHGB), IMB/PBG, dan memastikan proses KPR klien berjalan mulus bersama bank rekanan tanpa biaya tersembunyi.",
+      "Kim adalah orang yang akan membaca dokumen properti Anda sebelum Anda sempat bertanya. SHM, SHGB, IMB, PBG — ia yang pastikan semuanya bersih. Ia juga yang mendampingi proses KPR dari awal sampai approval, bukan sekadar merekomendasikan bank lalu pergi.",
   },
   {
     id: "person3",
-    image: "/about-person3.jpg", // Ganti dengan foto tim ke-3
-    title: "Nama Anggota 3",
-    subtitle: "Spesialis Area Depok",
+    image: "/about-person3.jpg",
+    title: "Aji Adzdzikri",
+    subtitle: "Spesialis Area · Depok",
     description:
-      "Lahir dan besar di Depok. Mengenal setiap gang, rencana tata kota, hingga riwayat banjir di setiap kawasan. Wawasannya memastikan klien membeli properti di lokasi yang secara jangka panjang menguntungkan.",
+      "Tanya Aji soal kawasan mana yang rawan banjir, mana yang tata kotanya sedang berkembang, mana yang harganya masih wajar tapi nilainya akan naik — ia punya jawabannya. Pengetahuan lapangan ini yang membuat klien kami tidak menyesal soal lokasi.",
   },
   {
     id: "person4",
-    image: "/about-person4.jpg", // Ganti dengan foto tim ke-4
-    title: "Nama Anggota 4",
-    subtitle: "Manajer Hubungan Klien",
+    image: "/about-person4.jpg",
+    title: "Basthatan Fi Al Illmi",
+    subtitle: "Hubungan Klien",
     description:
-      "Mendampingi klien dari survei pertama hingga serah terima kunci. Menjaga komunikasi tetap transparan dan memastikan setiap pertanyaan teknis dari klien terjawab dengan data, bukan janji manis.",
+      "Basthatan yang memastikan tidak ada klien yang merasa ditinggal di tengah proses. Dari jadwal survei pertama sampai hari tanda tangan AJB, ia yang menjaga komunikasi tetap jernih — semua pertanyaan dijawab dengan data, bukan dengan janji yang terdengar meyakinkan.",
   },
   {
     id: "activity",
-    image: "/about-activity.jpg", // Ganti dengan foto lagi survei
+    image: "/about-activity.jpg",
     title: "Survei Lapangan",
-    subtitle: "Verifikasi Tanpa Kompromi",
+    subtitle: "Dilihat Langsung, Bukan dari Brosur",
     description:
-      "Kami tidak menjual properti hanya dari brosur. Ini adalah potret saat kami mengecek kualitas material dan sirkulasi udara di salah satu cluster. Jika tidak layak untuk keluarga kami sendiri, maka tidak akan kami tawarkan kepada Anda.",
+      "Setiap properti yang masuk katalog kami sudah kami datangi sendiri. Bukan sekadar cek foto — kami lihat struktur bangunannya, rasakan sirkulasi udaranya, perhatikan lingkungan sekitarnya. Kalau kami sendiri tidak nyaman tinggal di sana, kami tidak akan tawarkan ke Anda.",
   },
 ];
 
