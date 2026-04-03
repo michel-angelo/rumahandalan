@@ -21,10 +21,16 @@ export default async function ListingsPage() {
     { data: locations, error: locError },
     { data: clusters, error: clusError },
   ] = await Promise.all([
+    // Ganti select "images:property_images(*)" menjadi lebih spesifik:
     supabase
       .from("properties")
       .select(
-        "*, cluster:clusters(*), location:locations(*), images:property_images(*)",
+        `
+    *,
+    cluster:clusters(id, name),
+    location:locations(id, district, city),
+    images:property_images(url, is_primary)
+  `,
       )
       .order("created_at", { ascending: false }), // Default urutkan dari yang terbaru
     supabase

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { cache } from "react";
+import { SITE_CONFIG } from "@/lib/constants";
 
 const getCluster = cache(async (slug: string) => {
   const { data, error } = await supabase
@@ -60,7 +61,7 @@ export default async function ClusterDetailPage({
   const coverImage =
     cluster.images?.find((img) => img.is_primary) ?? cluster.images?.[0];
 
-  const waLink = `https://wa.me/6282116207400?text=${encodeURIComponent(`Halo, saya ingin menjadwalkan kunjungan untuk melihat cluster *${cluster.name}*.`)}`;
+  const waLink = `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(`Halo, saya ingin menjadwalkan kunjungan untuk melihat cluster *${cluster.name}*.`)}`;
 
   return (
     <div className="bg-bg-page min-h-screen pt-24 pb-32">

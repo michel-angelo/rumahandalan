@@ -3,11 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
-  // Class untuk link navigasi editorial
+  if (pathname.startsWith("/promo") || pathname.startsWith("/admin")) {
+    return null;
+  }
+
   const navLinkClass =
     "text-text-primary text-[10px] font-bold uppercase tracking-[0.2em] hover:text-accent transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-accent hover:after:w-full after:transition-all after:duration-300";
 
