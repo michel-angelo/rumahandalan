@@ -21,8 +21,8 @@ export default function Footer() {
               />
             </Link>
             <p className="text-bg-surface/60 text-[15px] leading-relaxed max-w-sm">
-              Mendefinisikan ulang standar agen properti di Depok. Melayani
-              dengan integritas, mengkurasi dengan visi.
+              Tim kecil dengan pendampingan penuh. Kami bantu lebih dari 30
+              keluarga menemukan rumah yang tepat di Depok sejak 2022.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export default function Footer() {
               <ul className="flex flex-col gap-4">
                 <li>
                   <a
-                    href="https://wa.me/6281234567890"
+                    href="https://wa.me/6282116207400"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[13px] text-white/70 hover:text-white transition-colors"
@@ -105,14 +105,23 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Rumah Andalan.
           </p>
           <div className="flex gap-6">
-            {["Instagram", "LinkedIn"].map((social) => (
-              <Link
-                key={social}
-                href="#"
+            {[
+              {
+                label: "Instagram",
+                href: "https://instagram.com/rumahandalan",
+              },
+              { label: "Facebook", href: "https://facebook.com/rumahandalan" },
+              { label: "TikTok", href: "https://tiktok.com/@rumahandalan" },
+            ].map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-white/40 hover:text-white text-[11px] uppercase tracking-widest transition-colors"
               >
-                {social}
-              </Link>
+                {social.label}
+              </a>
             ))}
           </div>
         </div>
