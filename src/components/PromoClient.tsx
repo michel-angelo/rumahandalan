@@ -1,3 +1,4 @@
+//src/components/PromoClient.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -10,31 +11,20 @@ interface PromoClientProps {
 }
 
 export default function PromoClient({ waLink, priceDisplay, property }: PromoClientProps) {
-  // ── LIVE VIEWER COUNT ──
-  // Psikologi: Social proof real-time — "orang lain juga lihat ini" = validasi sosial
-  // Angka di-seed dari hash slug agar konsisten per properti, tapi bergerak realistis
   const [viewers, setViewers] = useState(0);
   const [viewerDelta, setViewerDelta] = useState<"up" | "down" | null>(null);
 
-  // ── UNIT SCARCITY ──
-  // Psikologi: Angka spesifik "2 unit" lebih dipercaya dari "terbatas"
-  // Jangan pakai angka bulat — angka ganjil/tidak bulat terasa lebih autentik
   const unitsLeft = 2;
 
-  // ── SESSION TIMER ──
-  // Psikologi: Waktu yang berjalan (bukan countdown) menciptakan sense of urgency pasif
-  // User sadar mereka sudah "investasi waktu" di halaman ini
   const [sessionSeconds, setSessionSeconds] = useState(0);
 
   useEffect(() => {
-    // Seed viewer count dari slug hash agar konsisten (bukan random tiap render)
     const seed = property.slug
       .split("")
       .reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    const baseViewers = 8 + (seed % 7); // 8–14 viewers
+    const baseViewers = 8 + (seed % 7);
     setViewers(baseViewers);
 
-    // Simulasi viewer fluctuation — realistis, tidak terlalu agresif
     const viewerInterval = setInterval(() => {
       setViewers((prev) => {
         const rand = Math.random();
@@ -51,7 +41,6 @@ export default function PromoClient({ waLink, priceDisplay, property }: PromoCli
       });
     }, 7000);
 
-    // Session timer
     const timerInterval = setInterval(() => {
       setSessionSeconds((s) => s + 1);
     }, 1000);
@@ -71,13 +60,11 @@ export default function PromoClient({ waLink, priceDisplay, property }: PromoCli
   return (
     <>
       {/* ── SCARCITY + LIVE VIEWER BAR ── */}
-      {/* Dua trigger psikologi dalam satu strip: scarcity (unit) + social proof (viewer) */}
       <div className="border border-text-primary/10 bg-bg-surface divide-y divide-text-primary/10">
 
         {/* Unit scarcity */}
         <div className="flex items-center justify-between px-5 py-4 gap-4">
           <div className="flex items-center gap-3">
-            {/* Dot merah berkedip — visual urgency tanpa teks berlebihan */}
             <span className="relative flex h-2 w-2 flex-shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
@@ -88,7 +75,6 @@ export default function PromoClient({ waLink, priceDisplay, property }: PromoCli
               di cluster ini
             </p>
           </div>
-          {/* Unit visual progress bar */}
           <div className="hidden sm:flex items-center gap-1.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <div
@@ -136,8 +122,6 @@ export default function PromoClient({ waLink, priceDisplay, property }: PromoCli
       </div>
 
       {/* ── MICRO-COMMITMENT CTA ── */}
-      {/* Psikologi: Commitment & Consistency — user yang sudah jawab "ya" lebih kecil kemungkinan bounce */}
-      {/* Muncul setelah user 30 detik di halaman */}
       {sessionSeconds >= 30 && (
         <div className="border border-accent/20 bg-accent-tint p-6 animate-fade-in-up">
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent mb-3">
