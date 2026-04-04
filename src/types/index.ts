@@ -1,3 +1,4 @@
+// src/types/index.ts
 export type Location = {
   id: string;
   district: string;
