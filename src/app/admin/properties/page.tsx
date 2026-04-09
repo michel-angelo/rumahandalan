@@ -12,13 +12,26 @@ import {
 // Nanti lu uncomment import ini kalau file DeletePropertyButton di atas udah lu bikin
 import DeletePropertyButton from "@/components/admin/DeleteProperty";
 
-export default async function AdminPropertiesPage() {
+export default async function AdminPropertiesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
   const supabase = await createSupabaseServerClient();
 
-  const { data: properties } = await supabase
+  const resolvedSearchParams = await searchParams;
+  const searchQuery = resolvedSearchParams.q || "";
+
+  let dbQuery = supabase
     .from("properties")
     .select("*, cluster:clusters(name), location:locations(district)")
     .order("created_at", { ascending: false });
+
+  if (searchQuery) {
+    dbQuery = dbQuery.ilike("title", `%${searchQuery}%`);
+  }
+
+  const { data: properties } = await dbQuery;
 
   return (
     <div className="flex flex-col gap-8">
@@ -33,14 +46,16 @@ export default async function AdminPropertiesPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <form method="GET" action="/admin/properties" className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8E8EA8]" />
             <input
               type="text"
-              placeholder="Cari properti..."
+              name="q"
+              defaultValue={searchQuery}
+              placeholder="Cari properti (Tekan Enter)..."
               className="bg-white/[0.03] border border-white/[0.06] rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder:text-[#8E8EA8] focus:outline-none focus:border-[#2E9AB8] focus:ring-1 focus:ring-[#2E9AB8] transition-all w-full sm:w-64"
             />
-          </div>
+          </form>
           <Link
             href="/admin/properties/new"
             className="flex items-center gap-2 bg-[#2E9AB8] hover:bg-[#2589a4] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
