@@ -230,7 +230,10 @@ export default async function PropertyDetailPage({
                   Naratif <span className="italic text-accent">Properti.</span>
                 </h2>
                 <div className="prose prose-lg prose-p:text-text-secondary prose-p:leading-relaxed max-w-none font-body text-[15px]">
-                  <p className="whitespace-pre-line">{property.description}</p>
+                  <div
+                    className="tiptap-content text-[16px] text-text-secondary leading-relaxed font-body"
+                    dangerouslySetInnerHTML={{ __html: property.description }}
+                  />{" "}
                 </div>
               </div>
             )}
