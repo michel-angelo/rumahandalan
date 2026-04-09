@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import RichTextEditor from "./RichTextEditor";
 
 type Props = {
   initialData?: any;
@@ -170,16 +171,15 @@ export default function ClusterForm({ initialData }: Props) {
           </div>
           <div>
             <label className={labelClass}>Deskripsi</label>
-            <textarea
-              name="description"
+            {/* Ganti textarea dengan RichTextEditor */}
+            <RichTextEditor
               value={form.description}
-              onChange={handleChange}
-              rows={3}
-              className={inputClass}
-              placeholder="Deskripsi cluster..."
+              onChange={(val: string) =>
+                setForm((prev) => ({ ...prev, description: val }))
+              }
+              placeholder="Tulis deskripsi lengkap dengan format yang rapi..."
             />
           </div>
-
           {/* UPLOAD FOTO SECTION */}
           <div className="mt-2">
             <label className={labelClass}>Foto Cover Cluster</label>
