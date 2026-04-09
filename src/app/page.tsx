@@ -9,7 +9,7 @@ import { SITE_CONFIG } from "@/lib/constants";
 // ─── Data Fetchers ────────────────────────────────────────────────────────────
 
 async function getFeaturedProperties() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("properties")
     .select(
       "*, cluster:clusters(*), location:locations(*), images:property_images(*)",
@@ -17,25 +17,40 @@ async function getFeaturedProperties() {
     .eq("is_featured", true)
     .eq("status", "tersedia")
     .limit(6);
+
+  if (error) {
+    console.error("Supabase Error (getFeaturedProperties):", error.message);
+  }
+
   return (data ?? []) as Property[];
 }
 
 async function getPromoClusters() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("clusters")
     .select("*, images:cluster_images(*)")
     .eq("is_promo", true)
     .limit(4);
+
+  if (error) {
+    console.error("Supabase Error (getPromoClusters):", error.message);
+  }
+
   return (data ?? []) as Cluster[];
 }
 
 async function getHeroImage() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("property_images")
     .select("url")
     .eq("is_primary", true)
     .limit(1)
     .single();
+
+  if (error && error.code !== "PGRST116") {
+    console.error("Supabase Error (getHeroImage):", error.message);
+  }
+
   return data?.url ?? null;
 }
 
@@ -128,7 +143,7 @@ function PropertyCard({
 }
 
 function ClusterCard({ cluster }: { cluster: Cluster }) {
-  const image = cluster.images?.[0]?.image_url;
+  const image = cluster.image_url || cluster.images?.[0]?.image_url;
 
   return (
     <Link
@@ -222,21 +237,13 @@ export default async function Home() {
             data-aos-duration="1500"
           >
             <div className="absolute inset-0 bg-accent-wash translate-x-4 -translate-y-4 lg:translate-x-8 lg:-translate-y-8"></div>
-            <div
-              className="lg:col-span-7 relative h-[50vh] lg:h-[80vh] w-full order-1 lg:order-2"
-              data-aos="fade-left"
-              data-aos-duration="1500"
-            >
-              <div className="absolute inset-0 bg-accent-wash translate-x-4 -translate-y-4 lg:translate-x-8 lg:-translate-y-8"></div>
-              <Image
-                src={heroImage || "/og-image.jpg"}
-                alt="Interior arsitektur elegan"
-                fill
-                className="object-cover relative z-10"
-                priority // <-- Sangat krusial untuk Hero Image
-                sizes="(max-width: 1024px) 100vw, 60vw" // Tambahkan sizes biar LCP makin ngebut
-              />
-            </div>
+            <Image
+              src={heroImage || "/og-image.jpg"}
+              alt="Interior arsitektur elegan"
+              fill
+              className="object-cover relative z-10"
+              priority
+            />
           </div>
         </div>
       </section>
@@ -359,7 +366,7 @@ export default async function Home() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link
-              href="https://wa.me/${SITE_CONFIG.whatsappNumber}"
+              href={`https://wa.me/${SITE_CONFIG.whatsappNumber}`}
               target="_blank"
               className="px-8 py-4 bg-accent text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-text-primary transition-colors"
             >
