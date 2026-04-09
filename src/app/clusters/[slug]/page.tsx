@@ -9,9 +9,9 @@ import { SITE_CONFIG } from "@/lib/constants";
 const getCluster = cache(async (slug: string) => {
   const { data, error } = await supabase
     .from("clusters")
-    .select("*, images:cluster_images(*)")
+    .select("*, images:cluster_images(*)") // "*" sudah mencakup image_url
     .eq("slug", slug)
-    .maybeSingle();
+    .single();
   if (error && error.code !== "PGRST116") {
     console.error("Error fetching cluster:", error);
   }
@@ -58,9 +58,10 @@ export default async function ClusterDetailPage({
   if (!cluster) notFound();
 
   const properties = await getClusterProperties(cluster.id);
-  const coverImage =
-    cluster.images?.find((img) => img.is_primary) ?? cluster.images?.[0];
-
+  const coverImageUrl =
+    cluster.image_url ||
+    cluster.images?.find((img) => img.is_primary)?.image_url ||
+    cluster.images?.[0]?.image_url;
   const waLink = `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(`Halo, saya ingin menjadwalkan kunjungan untuk melihat cluster *${cluster.name}*.`)}`;
 
   return (
@@ -113,9 +114,9 @@ export default async function ClusterDetailPage({
           </div>
 
           <div className="lg:col-span-6 relative aspect-[4/3] w-full bg-bg-surface overflow-hidden">
-            {coverImage && (
+            {coverImageUrl && (
               <Image
-                src={coverImage.image_url}
+                src={coverImageUrl}
                 alt={cluster.name}
                 fill
                 className="object-cover grayscale-[10%]"
@@ -133,9 +134,10 @@ export default async function ClusterDetailPage({
             <h2 className="text-[10px] font-bold text-text-muted uppercase tracking-[0.3em] mb-6">
               Naratif Lingkungan
             </h2>
-            <p className="text-[16px] text-text-secondary leading-relaxed font-body">
-              {cluster.description}
-            </p>
+            <div
+              className="tiptap-content text-[16px] text-text-secondary leading-relaxed font-body"
+              dangerouslySetInnerHTML={{ __html: cluster.description }}
+            />
           </div>
         )}
 
@@ -225,6 +227,25 @@ export default async function ClusterDetailPage({
             </div>
           )}
         </div>
+      </div>
+      {/* ── MOBILE STICKY CTA (Hanya muncul di HP) ── */}
+      <div className="fixed bottom-0 left-0 w-full z-50 bg-bg-page border-t border-text-primary/20 p-5 lg:hidden flex items-center justify-between gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em] mb-1">
+            Kawasan
+          </p>
+          <p className="font-display text-xl text-text-primary leading-none truncate">
+            {cluster.name}
+          </p>
+        </div>
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap hover:bg-accent hover:text-white transition-colors"
+        >
+          Tanya WA
+        </a>
       </div>
     </div>
   );
