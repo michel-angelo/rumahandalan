@@ -6,6 +6,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import toast from "react-hot-toast";
 import ImageUploader, { PendingImage, UploadedImage } from "./ImageUploader";
 import imageCompression from "browser-image-compression";
+import RichTextEditor from "./RichTextEditor";
 
 type Cluster = { id: string; name: string };
 type Location = { id: string; district: string; city: string };
@@ -401,13 +402,13 @@ export default function PropertyForm({
           </div>
           <div>
             <label className={labelClass}>Deskripsi</label>
-            <textarea
-              name="description"
+            {/* Ganti textarea dengan RichTextEditor */}
+            <RichTextEditor
               value={form.description}
-              onChange={handleChange}
-              rows={4}
-              className={inputClass}
-              placeholder="Deskripsi lengkap properti..."
+              onChange={(val: string) =>
+                setForm((prev) => ({ ...prev, description: val }))
+              }
+              placeholder="Tulis deskripsi lengkap dengan format yang rapi..."
             />
           </div>
         </div>
