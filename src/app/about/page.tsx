@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { SITE_CONFIG } from "@/lib/constants";
 
 const galleryData = [
   {
@@ -136,12 +137,22 @@ export default function AboutPage() {
               {activeItem.description}
             </p>
 
-            <Link
-              href="/contact"
-              className="inline-flex justify-center border border-text-primary text-text-primary px-8 py-4 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-text-primary hover:text-white transition-colors self-start"
-            >
-              Mulai Konsultasi
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 mt-2">
+              <a
+                href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Halo%20tim%20Rumah%20Andalan,%20saya%20habis%20baca%20profil%20timnya%20dan%20ingin%20konsultasi.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex justify-center bg-text-primary text-bg-page px-8 py-4 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-accent transition-colors"
+              >
+                Chat via WhatsApp
+              </a>
+              <Link
+                href="/contact"
+                className="inline-flex justify-center border border-text-primary text-text-primary px-8 py-4 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-text-primary hover:text-white transition-colors"
+              >
+                Jadwal Kunjungan
+              </Link>
+            </div>
           </div>
         </div>
       </div>
