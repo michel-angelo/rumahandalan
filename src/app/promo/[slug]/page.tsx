@@ -278,7 +278,6 @@ export default async function PromoLandingPage({
             </WaButton>
           </div>
         </section>
-
         {/* ══════════════════════════════════════
             2. TICKER URGENCY
         ══════════════════════════════════════ */}
@@ -498,36 +497,37 @@ export default async function PromoLandingPage({
             <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-text-muted mb-6">
               ── Tentang Properti
             </p>
-            <p className="font-body text-[16px] text-text-secondary leading-loose whitespace-pre-line max-w-2xl">
-              {property.description}
-            </p>
+            <div
+              className="tiptap-content text-[16px] text-text-secondary leading-relaxed font-body"
+              dangerouslySetInnerHTML={{ __html: property.description }}
+            />
           </div>
         </section>
 
         {/* ══════════════════════════════════════
-            11. WHY NOW — aggressive
+            11. WHY NOW — smart investment angle
         ══════════════════════════════════════ */}
         <section className="bg-text-primary border-t border-white/10">
           <div className="max-w-4xl mx-auto px-5 sm:px-8 py-14">
             <p className="font-display text-white text-3xl sm:text-4xl md:text-5xl leading-tight mb-12 max-w-lg">
-              Setiap hari yang Anda tunda adalah uang yang hilang.
+              Amankan Nilai Uang Anda Sebelum Kenaikan Harga Tahun Ini.
             </p>
             <div className="flex flex-col gap-0 border border-white/10">
               {[
                 {
                   num: "01",
-                  title: "Harga properti Depok naik 8–12% per tahun.",
-                  body: "Cicilan yang sama hari ini tidak akan tersedia tahun depan.",
+                  title: "Capital Gain Properti Tumbuh Stabil 8-12%.",
+                  body: "Mengunci harga hari ini berarti Anda sudah untung sebelum serah terima kunci.",
                 },
                 {
                   num: "02",
-                  title: "Halaman ini hilang begitu unit terjual.",
-                  body: "Tidak ada waiting list. Tidak ada pemberitahuan. Hilang begitu saja.",
+                  title: "Ketersediaan Unit Promo Terbatas.",
+                  body: "Halaman penawaran khusus ini akan ditutup otomatis saat kuota unit promosi terpenuhi.",
                 },
                 {
                   num: "03",
-                  title: "Benefit ini eksklusif dari iklan ini saja.",
-                  body: "Datang langsung ke marketing gallery? Benefit tidak bisa diklaim.",
+                  title: "Benefit Eksklusif Jalur Prioritas.",
+                  body: "Diskon dan keringanan biaya ini hanya valid melalui pendampingan tim kami, tidak tersedia di marketing gallery umum.",
                 },
               ].map((item, i) => (
                 <div
@@ -550,35 +550,35 @@ export default async function PromoLandingPage({
             </div>
             <div className="mt-8">
               <WaButton href={waLink} className="w-full text-[11px] py-6">
-                Ya, Saya Tidak Mau Menyesal — Chat Sekarang
+                Amankan Kesempatan Ini — Chat Sekarang
               </WaButton>
             </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════════
-            12. TESTIMONIAL
+            12. TESTIMONIAL — Authority Bias
         ══════════════════════════════════════ */}
         <section className="bg-bg-page border-t border-text-primary/10">
           <div className="max-w-4xl mx-auto px-5 sm:px-8 py-14">
-            <p className="text-white/40 text-[9px] font-bold uppercase tracking-[0.4em] mb-10">
+            <p className="text-text-primary/40 text-[9px] font-bold uppercase tracking-[0.4em] mb-10">
               ── Kata Mereka
             </p>
-            <div className="flex flex-col gap-0 border border-white/10">
+            <div className="flex flex-col gap-0 border border-text-primary/10">
               {[
                 {
                   initials: "RA",
-                  name: "Pembeli Verified",
-                  context: "Depok, 2024",
+                  name: "Keluarga Baru",
+                  context: "Karyawan Swasta, Sudirman",
                   quote:
-                    "Prosesnya lebih mudah dari yang saya bayangkan. Tim Rumah Andalan bantu dari awal sampai akad — tidak ada yang ditutup-tutupin.",
+                    "Prosesnya jauh lebih mulus dari yang kami bayangkan. Tim Rumah Andalan bantu negosiasi sampai akad, transparan 100%.",
                 },
                 {
                   initials: "YP",
-                  name: "Pembeli Verified",
-                  context: "Depok, 2024",
+                  name: "Investor Properti",
+                  context: "PNS, Depok",
                   quote:
-                    "Saya tanya jam 9 malam, langsung direspons. Tidak ada tekanan sama sekali. Malah dibantu kalkulasi KPR dulu sebelum saya putuskan.",
+                    "Saya chat jam 9 malam dan langsung direspons dengan data kalkulasi yang detail. Nggak ada paksaan, sangat profesional.",
                 },
               ].map((t, i) => (
                 <div
@@ -605,6 +605,43 @@ export default async function PromoLandingPage({
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════
+            12.5 AUTHORITY — Who are we?
+        ══════════════════════════════════════ */}
+        <section className="bg-text-primary border-t border-white/10">
+          <div className="max-w-4xl mx-auto px-5 sm:px-8 py-14 flex flex-col md:flex-row items-center md:items-start gap-8">
+            <div className="w-16 h-16 shrink-0 bg-accent flex items-center justify-center">
+              {/* Shield Icon untuk keamanan */}
+              <svg
+                className="w-8 h-8 text-bg-page"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 className="font-display text-2xl sm:text-3xl text-white mb-3">
+                Mengapa Menggunakan Rumah Andalan?
+              </h2>
+              <p className="text-white/60 text-[14px] leading-relaxed">
+                Kami bukan sekadar perantara penjual. Kami adalah{" "}
+                <strong>Kurator Properti</strong>. Setiap hunian yang tampil di
+                halaman ini telah melewati proses verifikasi legalitas,
+                sertifikat, dan rekam jejak developer yang ketat oleh tim kami.
+                Anda fokus mencari rumah impian Anda, kami yang memastikan
+                transaksinya 100% aman.
+              </p>
             </div>
           </div>
         </section>
