@@ -53,19 +53,19 @@ const FontSize = Extension.create({
   addCommands() {
     return {
       setFontSize:
-        (fontSize) =>
-        ({ chain }) => {
+        (fontSize: string) =>
+        ({ chain }: any) => {
           return chain().setMark("textStyle", { fontSize }).run();
         },
       unsetFontSize:
         () =>
-        ({ chain }) => {
+        ({ chain }: any) => {
           return chain()
             .setMark("textStyle", { fontSize: null })
             .removeEmptyTextStyle()
             .run();
         },
-    };
+    } as any;
   },
 });
 
@@ -225,7 +225,7 @@ const LucideInlineIcon = Node.create({
             attrs: { icon },
           });
         },
-    };
+    } as any;
   },
 });
 
