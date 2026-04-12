@@ -41,9 +41,11 @@ async function getPromoClusters() {
 
 async function getHeroImage() {
   const { data, error } = await supabase
-    .from("property_images")
-    .select("url")
-    .eq("is_primary", true)
+    .from("properties")
+    .select("images:property_images(url, is_primary)")
+    .eq("is_featured", true)
+    .eq("status", "tersedia")
+    .order("created_at", { ascending: false })
     .limit(1)
     .single();
 
@@ -51,7 +53,9 @@ async function getHeroImage() {
     console.error("Supabase Error (getHeroImage):", error.message);
   }
 
-  return data?.url ?? null;
+  const primaryImg = data?.images?.find((img: any) => img.is_primary);
+
+  return primaryImg?.url ?? null;
 }
 
 async function getTestimonials() {
