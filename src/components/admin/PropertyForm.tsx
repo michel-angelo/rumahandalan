@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import ImageUploader, { PendingImage, UploadedImage } from "./ImageUploader";
 import imageCompression from "browser-image-compression";
 import RichTextEditor from "./RichTextEditor";
+import { access } from "fs";
 
 type Cluster = { id: string; name: string };
 type Location = { id: string; district: string; city: string };
@@ -51,6 +52,10 @@ export default function PropertyForm({
 
   const [facilitiesInput, setFacilitiesInput] = useState(
     initialData?.facilities?.join("\n") || "",
+  );
+
+  const [accessInput, setAccessInput] = useState(
+    initialData?.access?.join("\n") || "",
   );
 
   const [promosInput, setPromosInput] = useState(
@@ -200,6 +205,10 @@ export default function PropertyForm({
         facilities: facilitiesInput
           .split("\n")
           .map((f: string) => f.trim())
+          .filter(Boolean),
+        access: accessInput // <--- TAMBAHAN BARU
+          .split("\n")
+          .map((a: string) => a.trim())
           .filter(Boolean),
         promo_labels: form.is_promo
           ? promosInput
@@ -563,17 +572,31 @@ export default function PropertyForm({
       {/* --- FASILITAS & AKSES --- */}
       <div className={cardClass}>
         <h2 className={titleClass}>Fasilitas & Akses</h2>
-        <div>
-          <label className={labelClass}>
-            Fasilitas & Akses Terdekat (Pisahkan dengan Enter)
-          </label>
-          <textarea
-            value={facilitiesInput}
-            onChange={(e) => setFacilitiesInput(e.target.value)}
-            rows={4}
-            placeholder="Contoh:&#10;10 Menit ke Tol Margonda&#10;5 Menit ke Stasiun Depok Baru&#10;Keamanan 24 Jam & CCTV"
-            className={inputClass}
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label className={labelClass}>
+              Fasilitas Internal (Pisahkan dengan Enter)
+            </label>
+            <textarea
+              value={facilitiesInput}
+              onChange={(e) => setFacilitiesInput(e.target.value)}
+              rows={4}
+              placeholder="Contoh:&#10;Kolam Renang&#10;Keamanan 24 Jam & CCTV&#10;Smart Home System"
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>
+              Akses Lokasi (Pisahkan dengan Enter)
+            </label>
+            <textarea
+              value={accessInput}
+              onChange={(e) => setAccessInput(e.target.value)}
+              rows={4}
+              placeholder="Contoh:&#10;5 Menit ke Stasiun Depok Baru&#10;10 Menit ke Tol Margonda&#10;Selangkah ke Universitas Indonesia"
+              className={inputClass}
+            />
+          </div>
         </div>
       </div>
 
@@ -594,6 +617,21 @@ export default function PropertyForm({
         <h2 className={titleClass}>Opsi Tambahan</h2>
 
         <div className="border-t border-white/[0.06] pt-5">
+          {/* --- CHECKBOX BARU: FEATURED (HOMEPAGE) --- */}
+          <label className="flex items-center gap-2.5 cursor-pointer mb-4 group">
+            <input
+              type="checkbox"
+              name="is_featured"
+              checked={form.is_featured}
+              onChange={handleChange}
+              className="w-4 h-4 rounded border-white/20 bg-white/5 accent-[#2E9AB8] focus:ring-[#2E9AB8]"
+            />
+            <span className="text-[14px] text-[#EEEDF8] font-medium group-hover:text-white transition-colors">
+              Tampilkan di Halaman Utama (Featured Property)
+            </span>
+          </label>
+
+          {/* --- CHECKBOX LAMA: PROMO --- */}
           <label className="flex items-center gap-2.5 cursor-pointer mb-4 group">
             <input
               type="checkbox"
@@ -607,7 +645,6 @@ export default function PropertyForm({
             </span>
           </label>
 
-          {/* TEXTAREA MUNCUL OTOMATIS KALAU DICENTANG */}
           {form.is_promo && (
             <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
               <label className={labelClass}>

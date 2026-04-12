@@ -59,6 +59,7 @@ export type Property = {
   is_promo: boolean;
   promo_labels: string[];
   facilities: string[];
+  access: string[];
 };
 
 export type PropertyImage = {
