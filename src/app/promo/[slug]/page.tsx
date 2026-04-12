@@ -462,28 +462,63 @@ export default async function PromoLandingPage({
         </section>
 
         {/* ══════════════════════════════════════
-            9. FASILITAS
+            9. FASILITAS & AKSES
         ══════════════════════════════════════ */}
-        {property.facilities?.length > 0 && (
+        {(property.facilities?.length > 0 || property.access?.length > 0) && (
           <section className="bg-text-primary border-t border-white/10">
             <div className="max-w-4xl mx-auto px-5 sm:px-8 py-12">
               <p className="text-white/40 text-[9px] font-bold uppercase tracking-[0.4em] mb-8">
-                ── Fasilitas
+                ── Lingkungan & Fasilitas
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {property.facilities.map((fac: string, i: number) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 py-4 px-5 border border-white/10"
-                  >
-                    <span className="text-accent font-bold text-lg leading-none">
-                      —
-                    </span>
-                    <span className="text-white/70 text-[12px] font-medium uppercase tracking-[0.1em]">
-                      {fac}
-                    </span>
+
+              <div className="flex flex-col md:flex-row gap-10 md:gap-16">
+                {/* Kolom Fasilitas */}
+                {property.facilities?.length > 0 && (
+                  <div className="flex-1">
+                    <p className="text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                      Fasilitas Unit / Cluster
+                    </p>
+                    <div className="flex flex-col gap-3">
+                      {property.facilities.map((fac: string, i: number) => (
+                        <div
+                          key={`fac-${i}`}
+                          className="flex items-center gap-3 py-3 border-b border-white/10"
+                        >
+                          <span className="text-white/30 font-bold text-sm leading-none">
+                            —
+                          </span>
+                          <span className="text-white/70 text-[13px] font-medium">
+                            {fac}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                )}
+
+                {/* Kolom Akses */}
+                {property.access?.length > 0 && (
+                  <div className="flex-1">
+                    <p className="text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                      Aksesibilitas
+                    </p>
+                    <div className="flex flex-col gap-3">
+                      {property.access.map((acc: string, i: number) => (
+                        <div
+                          key={`acc-${i}`}
+                          className="flex items-center gap-3 py-3 border-b border-white/10"
+                        >
+                          <span className="text-white/30 font-bold text-sm leading-none">
+                            —
+                          </span>
+                          <span className="text-white/70 text-[13px] font-medium">
+                            {acc}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>

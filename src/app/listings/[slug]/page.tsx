@@ -216,9 +216,18 @@ export default async function PropertyDetailPage({
                 </div>
                 <div>
                   <p className={labelClass}>Asosiasi Cluster</p>
-                  <p className="font-display text-xl text-text-primary line-clamp-1">
-                    {property.cluster?.name ?? "Independen"}
-                  </p>
+                  {property.cluster ? (
+                    <Link
+                      href={`/clusters/${property.cluster.slug}`}
+                      className="font-display text-xl text-text-primary hover:text-accent transition-colors line-clamp-1 block decoration-accent/30 decoration-1 underline-offset-4 hover:underline"
+                    >
+                      {property.cluster.name}
+                    </Link>
+                  ) : (
+                    <p className="font-display text-xl text-text-primary line-clamp-1">
+                      Independen
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -238,25 +247,71 @@ export default async function PropertyDetailPage({
               </div>
             )}
 
-            {/* Fasilitas (Tanpa Icon Generik) */}
-            {property.facilities && property.facilities.length > 0 && (
+            {(property.facilities?.length > 0 ||
+              property.access?.length > 0) && (
               <div className="border-t border-text-primary/20 pt-10">
                 <h2 className="font-display text-3xl text-text-primary mb-8">
                   Fasilitas <span className="italic text-accent">& Akses.</span>
                 </h2>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {property.facilities.map((facility, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-4 text-text-secondary text-[15px] font-medium py-3 border-b border-text-primary/10"
-                    >
-                      <span className="text-[10px] font-bold mt-1 text-accent tracking-widest">
-                        {(index + 1).toString().padStart(2, "0")}
-                      </span>
-                      {facility}
-                    </li>
-                  ))}
-                </ul>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  {/* Kolom Fasilitas Internal */}
+                  {property.facilities && property.facilities.length > 0 && (
+                    <div>
+                      <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mb-4">
+                        Fasilitas Internal
+                      </h3>
+                      <ul className="flex flex-col gap-0">
+                        {property.facilities.map((facility, index) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-4 text-text-secondary text-[15px] font-medium py-3 border-b border-text-primary/10"
+                          >
+                            <span className="text-[10px] font-bold mt-1 text-accent tracking-widest">
+                              {(index + 1).toString().padStart(2, "0")}
+                            </span>
+                            {facility}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Kolom Akses Terdekat */}
+                  {property.access && property.access.length > 0 && (
+                    <div>
+                      <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mb-4">
+                        Akses Lokasi Terdekat
+                      </h3>
+                      <ul className="flex flex-col gap-0">
+                        {property.access.map((acc, index) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-4 text-text-secondary text-[15px] font-medium py-3 border-b border-text-primary/10"
+                          >
+                            <span className="text-accent mt-0.5">
+                              {/* Ikon Map/Lokasi yang elegan */}
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                className="w-5 h-5"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v10.764a1 1 0 01-1.447.894L15 18M5 18l-1.553.776A1 1 0 012 17.882V7.118a1 1 0 011.447-.894L5 6m10 4v8m-10-8v8m0-8l10-4m-10 4l10 4"
+                                />
+                              </svg>
+                            </span>
+                            {acc}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
