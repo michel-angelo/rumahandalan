@@ -181,10 +181,10 @@ export default async function PromoLandingPage({
       {/* ── HEADER ── */}
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 py-3 bg-text-primary">
         <Image
-          src="/logo-nav.png"
+          src="/logo-white.png" // Ganti ke logo versi putih
           alt="Rumah Andalan"
-          width={110}
-          height={26}
+          width={130} // Sesuaikan ukurannya agar proporsional
+          height={32}
           className="object-contain"
         />
         <WaButton href={waLink} className="text-[9px] px-4 py-2.5">

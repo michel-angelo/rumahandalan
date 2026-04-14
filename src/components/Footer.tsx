@@ -23,7 +23,7 @@ export default function Footer() {
             >
               {/* Placeholder Logo: Pastikan ada logo-footer.png di folder public */}
               <Image
-                src="/logo-footer.png"
+                src="/logo-white.png"
                 alt="Logo Rumah Andalan"
                 fill
                 className="object-contain object-left"
@@ -111,7 +111,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 gap-4">
           <p className="text-white/40 text-[11px] uppercase tracking-widest text-center md:text-left">
-            &copy; {new Date().getFullYear()} Rumah Andalan.
+            &copy; {new Date().getFullYear()} Rumah Andalan by Baß.
           </p>
           <div className="flex gap-6">
             {[

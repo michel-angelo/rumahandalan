@@ -33,15 +33,17 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <div className="flex justify-between items-center h-24">
           {/* Logo Placeholder */}
+          {/* Logo */}
           <Link
             href="/"
-            className="relative block h-8 sm:h-10 w-[160px] sm:w-[200px] flex-shrink-0"
+            className="relative block w-[140px] md:w-[180px] flex-shrink-0"
           >
             <Image
-              src="/logo-nav.png"
-              alt="Logo Rumah Andalan"
-              fill
-              className="object-contain object-left"
+              src="/logo-black.png"
+              alt="Rumah Andalan"
+              width={500} // Pakai resolusi asli hasil crop
+              height={60} // Pakai resolusi asli hasil crop
+              className="w-full h-auto object-contain"
               priority
             />
           </Link>
