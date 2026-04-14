@@ -69,9 +69,9 @@ export default function AboutPage() {
             Siapa Kami
           </p>
           <h1 className="font-display text-5xl md:text-6xl text-text-primary leading-[1.1] tracking-tight">
-            Kecil, Gesit, dan <br />
+            Modern, Ramah, dan <br />
             <span className="italic font-light text-accent">
-              Sangat Personal.
+              Sangat Profesional.
             </span>
           </h1>
         </div>
