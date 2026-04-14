@@ -1,4 +1,4 @@
-//src/app/about/page.tsx
+// src/app/about/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -27,25 +27,25 @@ const galleryData = [
     id: "person2",
     image: "/thumbnail-kim.webp",
     title: "Kim Arvino",
-    subtitle: "Legalitas & KPR",
+    subtitle: "Spesialis Area · Depok",
     description:
-      "Kim adalah orang yang akan membaca dokumen properti Anda sebelum Anda sempat bertanya. SHM, SHGB, IMB, PBG — ia yang pastikan semuanya bersih. Ia juga yang mendampingi proses KPR dari awal sampai approval, bukan sekadar merekomendasikan bank lalu pergi.",
+      "Tanya Kim soal kawasan mana yang rawan banjir, mana yang tata kotanya sedang berkembang, mana yang harganya masih wajar tapi nilainya akan naik — ia punya jawabannya. Pengetahuan lapangan ini yang membuat klien kami tidak menyesal soal lokasi.",
   },
   {
     id: "person3",
     image: "/thumbnail-aji.webp",
     title: "Aji Adzdzikri",
-    subtitle: "Spesialis Area · Depok",
+    subtitle: "Hubungan Klien",
     description:
-      "Tanya Aji soal kawasan mana yang rawan banjir, mana yang tata kotanya sedang berkembang, mana yang harganya masih wajar tapi nilainya akan naik — ia punya jawabannya. Pengetahuan lapangan ini yang membuat klien kami tidak menyesal soal lokasi.",
+      "Aji yang memastikan tidak ada klien yang merasa ditinggal di tengah proses. Dari jadwal survei pertama sampai hari tanda tangan AJB, ia yang menjaga komunikasi tetap jernih — semua pertanyaan dijawab dengan data, bukan dengan janji yang terdengar meyakinkan.",
   },
   {
     id: "person4",
     image: "/thumbnail-basthatan.jpg",
     title: "Basthatan Fi Al Illmi",
-    subtitle: "Hubungan Klien",
+    subtitle: "Legalitas & KPR",
     description:
-      "Basthatan yang memastikan tidak ada klien yang merasa ditinggal di tengah proses. Dari jadwal survei pertama sampai hari tanda tangan AJB, ia yang menjaga komunikasi tetap jernih — semua pertanyaan dijawab dengan data, bukan dengan janji yang terdengar meyakinkan.",
+      "Basthatan adalah orang yang akan membaca dokumen properti Anda sebelum Anda sempat bertanya. SHM, SHGB, IMB, PBG — ia yang pastikan semuanya bersih. Ia juga yang mendampingi proses KPR dari awal sampai approval, bukan sekadar merekomendasikan bank lalu pergi.",
   },
   {
     id: "activity",
@@ -78,12 +78,12 @@ export default function AboutPage() {
 
         {/* ── E-Commerce Product Display Section ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Kiri: Super Image & Thumbnails */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
-            {/* Super Image (Aspek Rasio Editorial 4:5 atau 1:1) */}
-            <div className="relative w-full aspect-[4/5] md:aspect-square bg-bg-surface overflow-hidden transition-all duration-700">
+          {/* Kiri: Super Image & Thumbnails (Sticky) */}
+          <div className="lg:col-span-7 flex flex-col gap-4 sticky top-20 lg:top-32 z-20 bg-bg-page py-2 -mx-5 px-5 lg:mx-0 lg:px-0 lg:py-0">
+            {/* Super Image - Dikecilkan lebarnya di mobile (w-[80%]) tapi tetap rasio 4:5 */}
+            <div className="relative w-[80%] mx-auto lg:w-full aspect-[4/5] md:aspect-square bg-bg-surface overflow-hidden transition-all duration-700 shadow-sm lg:shadow-none">
               <Image
-                key={activeItem.id} // Memaksa re-render animasi saat diganti
+                key={activeItem.id}
                 src={activeItem.image}
                 alt={activeItem.title}
                 fill
@@ -92,13 +92,18 @@ export default function AboutPage() {
               />
             </div>
 
-            {/* Gallery Thumbnails (Bisa di-scroll nyamping kalau di mobile) */}
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            {/* Gallery Thumbnails */}
+            <div className="flex justify-center lg:justify-start gap-3 overflow-x-auto pb-2 scrollbar-hide">
               {galleryData.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveItem(item)}
-                  className={`relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 transition-all duration-500 overflow-hidden ${
+                  onClick={() => {
+                    setActiveItem(item);
+                    if (window.innerWidth < 1024) {
+                      window.scrollTo({ top: 180, behavior: "smooth" });
+                    }
+                  }}
+                  className={`relative w-14 h-14 sm:w-28 sm:h-28 flex-shrink-0 transition-all duration-500 overflow-hidden ${
                     activeItem.id === item.id
                       ? "border-b-2 border-text-primary grayscale-0 scale-100"
                       : "grayscale opacity-60 hover:opacity-100 hover:grayscale-0 scale-95"
@@ -115,8 +120,8 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Kanan: Deskripsi (Product Details) */}
-          <div className="lg:col-span-5 flex flex-col lg:sticky lg:top-32 lg:py-10">
+          {/* Kanan: Deskripsi (Dapat di-scroll) */}
+          <div className="lg:col-span-5 flex flex-col pt-4 lg:py-10">
             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-text-muted mb-4 animate-fade-in-up">
               {activeItem.subtitle}
             </p>
