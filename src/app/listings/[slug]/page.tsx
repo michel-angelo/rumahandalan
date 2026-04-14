@@ -144,6 +144,14 @@ export default async function PropertyDetailPage({
                 >
                   {status.label}
                 </span>
+
+                {/* BADGE PROMO BARU */}
+                {property.is_promo && (
+                  <span className="text-[10px] font-bold px-4 py-1.5 bg-red-600 text-white uppercase tracking-[0.3em] animate-pulse">
+                    Penawaran Terbatas
+                  </span>
+                )}
+
                 {property.is_featured && (
                   <span className="text-[10px] font-bold px-4 py-1.5 bg-accent text-bg-page uppercase tracking-[0.3em]">
                     Koleksi Eksklusif
@@ -231,6 +239,30 @@ export default async function PropertyDetailPage({
                 </div>
               </div>
             </div>
+
+            {/* Benefit Promo Khusus (Hanya muncul jika properti sedang promo) */}
+            {property.is_promo &&
+              property.promo_labels &&
+              property.promo_labels.length > 0 && (
+                <div className="border-t border-text-primary/20 pt-10">
+                  <div className="bg-accent/5 border border-accent/20 p-6 md:p-8">
+                    <p className="text-[10px] font-bold text-accent uppercase tracking-[0.3em] mb-4">
+                      Benefit Promo Khusus:
+                    </p>
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {property.promo_labels.map((promo, index) => (
+                        <li
+                          key={index}
+                          className="flex items-start gap-3 text-text-primary text-[15px] font-medium"
+                        >
+                          <span className="text-accent mt-0.5">✦</span>
+                          {promo}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
 
             {/* Deskripsi */}
             {property.description && (
