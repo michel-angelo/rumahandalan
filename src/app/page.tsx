@@ -296,8 +296,8 @@ export default async function Home() {
                 Cara Kami Bekerja
               </p>
               <h2 className="font-display text-4xl lg:text-5xl leading-tight mb-6">
-                Setiap Langkah <br />
-                <span className="italic font-light">Ada Orangnya.</span>
+                Setiap Orang <br />
+                <span className="italic font-light">Ada Pilihannya.</span>
               </h2>
               <p className="text-accent-tint/80 text-[15px] leading-relaxed">
                 Membeli properti adalah keputusan besar. Kami mendampingi Anda
