@@ -2,10 +2,20 @@ import { supabase } from "@/lib/supabase";
 import { Property } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "Koleksi Properti | Rumah Andalan",
-  description: "Eksplorasi kurasi hunian premium dan eksklusif di Depok.",
+export const metadata: Metadata = {
+  title: "Katalog Properti Depok | Pilihan Rumah Siap Huni",
+  description:
+    "Jelajahi koleksi rumah pilihan di lokasi strategis Depok. Semua properti sudah melewati tahap verifikasi dan kurasi ketat tim kami.",
+  openGraph: {
+    title: "Cari Rumah Pilihan Anda di Depok",
+    description:
+      "Lihat daftar rumah terbaik yang tersedia saat ini. Cek harga, lokasi, dan detail legalitas secara transparan.",
+    url: "https://rumahandalan.com/listings",
+    images: [{ url: "/og-listings.jpg", width: 1200, height: 630 }],
+    type: "website",
+  },
 };
 
 function formatPrice(price: number) {

@@ -5,8 +5,21 @@ import Link from "next/link";
 import Image from "next/image";
 import HeroSearch from "@/components/HeroSearch";
 import { SITE_CONFIG } from "@/lib/constants";
+import { Metadata } from "next";
 
 // ─── Data Fetchers ────────────────────────────────────────────────────────────
+
+export const metadata: Metadata = {
+  title: 'Rumah Andalan | Kurator Properti Pilihan di Depok',
+  description: 'Temukan rumah impian yang sudah dikurasi dengan standar tinggi. Transparan, legalitas aman, dan tanpa biaya tersembunyi.',
+  openGraph: {
+    title: 'Rumah Andalan | Kurator Properti Pilihan di Depok',
+    description: 'Beli rumah tanpa rasa khawatir. Kami kurasi setiap properti untuk memastikan Anda mendapatkan yang terbaik.',
+    url: 'https://rumahandalan.com',
+    images: [{ url: '/og-home.jpg', width: 1200, height: 630 }],
+    type: 'website',
+  },
+};
 
 async function getFeaturedProperties() {
   const { data, error } = await supabase

@@ -1,10 +1,19 @@
 import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/constants";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "Kontak | Rumah Andalan",
+export const metadata: Metadata = {
+  title: "Hubungi Kami | Konsultasi & Jadwal Survei Rumah",
   description:
-    "Hubungi Rumah Andalan untuk konsultasi properti gratis tanpa komitmen.",
+    "Punya pertanyaan seputar properti atau ingin menjadwalkan kunjungan lapangan? Tim kami siap membantu Anda kapan saja.",
+  openGraph: {
+    title: "Konsultasi Properti Gratis dengan Rumah Andalan",
+    description:
+      "Chat via WhatsApp atau buat janji temu untuk survei lokasi rumah impian Anda di Depok.",
+    url: "https://rumahandalan.com/contact",
+    images: [{ url: "/og-contact.jpg", width: 1200, height: 630 }],
+    type: "website",
+  },
 };
 
 export default function ContactPage() {
