@@ -25,7 +25,7 @@ const galleryData = [
   },
   {
     id: "person2",
-    image: "/about-person2.jpg",
+    image: "/thumbnail-kim.webp",
     title: "Kim Arvino",
     subtitle: "Legalitas & KPR",
     description:
@@ -33,7 +33,7 @@ const galleryData = [
   },
   {
     id: "person3",
-    image: "/about-person3.jpg",
+    image: "/thumbnail-aji.webp",
     title: "Aji Adzdzikri",
     subtitle: "Spesialis Area · Depok",
     description:
@@ -41,7 +41,7 @@ const galleryData = [
   },
   {
     id: "person4",
-    image: "/about-person4.jpg",
+    image: "/thumbnail-basthatan.jpg",
     title: "Basthatan Fi Al Illmi",
     subtitle: "Hubungan Klien",
     description:
@@ -49,7 +49,7 @@ const galleryData = [
   },
   {
     id: "activity",
-    image: "/about-activity.jpg",
+    image: "/about-activity.jpeg",
     title: "Survei Lapangan",
     subtitle: "Dilihat Langsung, Bukan dari Brosur",
     description:
