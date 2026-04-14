@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: 'Kenali Tim Rumah Andalan',
     description: 'Bertemu dengan para spesialis yang siap membantu Anda menemukan hunian terbaik di Depok dengan jujur dan profesional.',
     url: 'https://rumahandalan.com/about',
-    images: [{ url: '/about-team.jpg', width: 1200, height: 630 }],
+    images: [{ url: '/og-home.jpg', width: 1200, height: 630 }],
     type: 'website',
   },
 };
