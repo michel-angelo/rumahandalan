@@ -10,14 +10,16 @@ import { Metadata } from "next";
 // ─── Data Fetchers ────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: 'Rumah Andalan | Kurator Properti Pilihan di Depok',
-  description: 'Temukan rumah impian yang sudah dikurasi dengan standar tinggi. Transparan, legalitas aman, dan tanpa biaya tersembunyi.',
+  title: "Rumah Andalan | Kurator Properti Pilihan di Depok",
+  description:
+    "Temukan rumah impian yang sudah dikurasi dengan standar tinggi. Transparan, legalitas aman, dan tanpa biaya tersembunyi.",
   openGraph: {
-    title: 'Rumah Andalan | Kurator Properti Pilihan di Depok',
-    description: 'Beli rumah tanpa rasa khawatir. Kami kurasi setiap properti untuk memastikan Anda mendapatkan yang terbaik.',
-    url: 'https://rumahandalan.com',
-    images: [{ url: '/og-home.jpg', width: 1200, height: 630 }],
-    type: 'website',
+    title: "Rumah Andalan | Kurator Properti Pilihan di Depok",
+    description:
+      "Beli rumah tanpa rasa khawatir. Kami kurasi setiap properti untuk memastikan Anda mendapatkan yang terbaik.",
+    url: "https://rumahandalan.com",
+    images: [{ url: "/og-home.jpg", width: 1200, height: 630 }],
+    type: "website",
   },
 };
 
@@ -107,18 +109,28 @@ function PropertyCard({
       href={`/listings/${property.slug}`}
       className="group flex flex-col gap-4"
     >
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-bg-surface">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-bg-surface group-hover:shadow-lg transition-all duration-500">
         {primaryImage ? (
-          <Image
-            src={primaryImage.url}
-            alt={property.title}
-            fill
-            className={`object-cover transition-transform duration-[2s] ease-out group-hover:scale-105 ${
-              isSold ? "grayscale opacity-70" : ""
-            }`}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={priority}
-          />
+          <>
+            <Image
+              src={primaryImage.url}
+              alt={property.title}
+              fill
+              className={`object-cover transition-transform duration-[2s] ease-out group-hover:scale-105 ${
+                isSold ? "grayscale opacity-70" : ""
+              }`}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={priority}
+            />
+            {/* Overlay Gelap & CTA Hover Baru */}
+            {!isSold && (
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center z-10">
+                <span className="text-white text-[11px] font-bold uppercase tracking-[0.2em] border border-white px-6 py-3 backdrop-blur-sm">
+                  Lihat Detail
+                </span>
+              </div>
+            )}
+          </>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-border-light">
             <span className="text-text-muted text-[10px] uppercase tracking-widest font-bold">
@@ -225,8 +237,10 @@ export default async function Home() {
               data-aos-delay="100"
               className="font-display text-5xl sm:text-6xl lg:text-[5.5rem] leading-[1.05] text-text-primary mb-8"
             >
-              Menemukan Hunian <br />
-              <span className="italic font-light text-accent">Yang Tepat.</span>
+              Beli Rumah <br />
+              <span className="italic font-light text-accent">
+                Tanpa Rasa Cemas.
+              </span>
             </h1>
 
             <p
@@ -234,9 +248,9 @@ export default async function Home() {
               data-aos-delay="200"
               className="font-body text-lg text-text-secondary leading-relaxed max-w-md mb-12"
             >
-              Sudah 30+ keluarga kami bantu menemukan rumah yang benar-benar
-              cocok di Depok. Kami periksa legalitas, negosiasi harga, dan
-              dampingi sampai kunci di tangan Anda.
+              Sudah 30+ keluarga kami bantu. Kami kurasi lingkungannya, kami
+              bedah legalitasnya, dan kami pastikan KPR Anda tembus hingga serah
+              terima kunci.
             </p>
 
             <div
@@ -387,7 +401,7 @@ export default async function Home() {
               target="_blank"
               className="px-8 py-4 bg-accent text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-text-primary transition-colors"
             >
-              Mulai Konsultasi GRATIS!
+              Jadwalkan Private Consultation
             </Link>
             <Link
               href="/listings"
