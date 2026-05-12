@@ -144,12 +144,12 @@ export default function AboutPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-2">
               <a
-                href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Halo%20tim%20Rumah%20Andalan,%20saya%20habis%20baca%20profil%20timnya%20dan%20ingin%20konsultasi.`}
+                href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Halo,%20saya%20ingin%20konsultasi%20dengan%20${activeItem.title.split(" ")[0]}%20terkait%20properti.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex justify-center bg-text-primary text-bg-page px-8 py-4 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-accent transition-colors"
               >
-                Chat via WhatsApp
+                Konsultasi dengan {activeItem.title.split(" ")[0]}
               </a>
               <Link
                 href="/contact"
