@@ -45,6 +45,8 @@ export default function Navbar() {
               height={60} // Pakai resolusi asli hasil crop
               className="w-full h-auto object-contain"
               priority
+              fetchPriority="high"
+              loading="eager"
             />
           </Link>
 
