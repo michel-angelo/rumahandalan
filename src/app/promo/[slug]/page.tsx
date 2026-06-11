@@ -207,7 +207,7 @@ export default async function PromoLandingPage({
                   alt=""
                   fill
                   className="object-cover blur-3xl opacity-30 saturate-0"
-                  sizes="100vw"
+                  sizes="10vw"
                   quality={10}
                   aria-hidden
                 />
@@ -219,8 +219,8 @@ export default async function PromoLandingPage({
                 fill
                 priority
                 className="object-contain"
-                sizes="100vw"
-                quality={85}
+                sizes="(max-width: 768px) 100vw, 80vw"
+                quality={75}
               />
             </>
           )}
