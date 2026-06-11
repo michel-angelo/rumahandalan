@@ -57,9 +57,10 @@ async function getPromoClusters() {
 async function getHeroImage() {
   const { data, error } = await supabase
     .from("properties")
-    .select("images:property_images(url, is_primary)")
+    .select("images:property_images(url)")
     .eq("is_featured", true)
     .eq("status", "tersedia")
+    .eq("property_images.is_primary", true)
     .order("created_at", { ascending: false })
     .limit(1)
     .single();
@@ -68,9 +69,22 @@ async function getHeroImage() {
     console.error("Supabase Error (getHeroImage):", error.message);
   }
 
-  const primaryImg = data?.images?.find((img: any) => img.is_primary);
+  return data?.images?.[0]?.url ?? null;
+}
 
-  return primaryImg?.url ?? null;
+async function getDistricts() {
+  const { data, error } = await supabase
+    .from("locations")
+    .select("district")
+    .order("district");
+
+  if (error) {
+    console.error("Supabase Error (getDistricts):", error.message);
+    return [];
+  }
+
+  // Get unique districts
+  return Array.from(new Set(data.map((l: any) => l.district)));
 }
 
 async function getTestimonials() {
@@ -210,12 +224,13 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function Home() {
-  const [featuredProperties, promoClusters, heroImage, testimonials] =
+  const [featuredProperties, promoClusters, heroImage, testimonials, districts] =
     await Promise.all([
       getFeaturedProperties(),
       getPromoClusters(),
       getHeroImage(),
       getTestimonials(),
+      getDistricts(),
     ]);
 
   return (
@@ -258,7 +273,7 @@ export default async function Home() {
               data-aos-delay="300"
               className="w-full max-w-lg mb-10"
             >
-              <HeroSearch />
+              <HeroSearch districts={districts} />
             </div>
           </div>
 

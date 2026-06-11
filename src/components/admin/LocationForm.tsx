@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import toast from "react-hot-toast";
+import { saveGenericAction } from "@/app/actions/generic-actions";
 
 type Props = {
   initialData?: any;
@@ -30,14 +30,8 @@ export default function LocationForm({ initialData }: Props) {
     );
     setLoading(true);
 
-    const supabase = createSupabaseBrowserClient();
-
     try {
-      const { error } = isEdit
-        ? await supabase.from("locations").update(form).eq("id", initialData.id)
-        : await supabase.from("locations").insert(form);
-
-      if (error) throw error;
+      await saveGenericAction("locations", form, initialData?.id);
 
       toast.success(
         isEdit

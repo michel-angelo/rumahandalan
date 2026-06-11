@@ -6,8 +6,25 @@ import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import toast from "react-hot-toast";
 import ImageUploader, { PendingImage, UploadedImage } from "./ImageUploader";
 import imageCompression from "browser-image-compression";
-import RichTextEditor from "./RichTextEditor";
-import { access } from "fs";
+import dynamic from "next/dynamic";
+import { 
+  savePropertyAction, 
+  updatePropertyImagesAction, 
+  deletePropertyImagesAction,
+  addPropertyImageAction 
+} from "@/app/actions/property-actions";
+
+// Dynamic import for heavy rich text editor
+const RichTextEditor = dynamic(() => import("./RichTextEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[200px] w-full bg-white/[0.03] border border-white/[0.06] rounded-xl flex items-center justify-center">
+      <p className="text-[12px] text-[#8E8EA8] animate-pulse">
+        Memuat Editor...
+      </p>
+    </div>
+  ),
+});
 
 type Cluster = { id: string; name: string };
 type Location = { id: string; district: string; city: string };
@@ -105,35 +122,32 @@ export default function PropertyForm({
   }
 
   // --- IMAGE HANDLERS ---
-  // --- IMAGE HANDLERS ---
   async function handleFilesSelected(files: FileList) {
-    // Tampilkan loading toast biar admin tau lagi proses kompresi kalau fotonya banyak
     const loadingToast = toast.loading("Mengompresi foto...");
 
     try {
       const options = {
-        maxSizeMB: 0.5, // Maksimal ukuran file 500KB
-        maxWidthOrHeight: 1920, // Dimensi maksimal 1920px (Standar HD)
-        useWebWorker: true, // Biar browser gak nge-lag saat kompresi
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
       };
 
-      const compressedFiles = await Promise.all(
-        Array.from(files).map(async (file) => {
-          try {
-            // Kompresi file
-            const compressedFile = await imageCompression(file, options);
-            return compressedFile;
-          } catch (error) {
-            console.error("Gagal kompres foto:", error);
-            return file; // Kalau gagal, fallback pakai foto asli
-          }
-        }),
-      );
+      const compressedFiles: File[] = [];
+      
+      // Sequential processing to prevent RAM spikes
+      for (const file of Array.from(files)) {
+        try {
+          const compressedFile = await imageCompression(file, options);
+          compressedFiles.push(compressedFile as File);
+        } catch (error) {
+          console.error("Gagal kompres foto:", error);
+          compressedFiles.push(file); // Fallback to original
+        }
+      }
 
       const newPending = compressedFiles.map((file, i) => ({
-        file: file as File,
+        file: file,
         preview: URL.createObjectURL(file),
-        // Jadikan primary kalau ini gambar pertama kali yang dimasukkan
         is_primary:
           existingImages.length === 0 && pendingImages.length === 0 && i === 0,
       }));
@@ -206,7 +220,7 @@ export default function PropertyForm({
           .split("\n")
           .map((f: string) => f.trim())
           .filter(Boolean),
-        access: accessInput // <--- TAMBAHAN BARU
+        access: accessInput
           .split("\n")
           .map((a: string) => a.trim())
           .filter(Boolean),
@@ -215,27 +229,16 @@ export default function PropertyForm({
               .split("\n")
               .map((p: string) => p.trim())
               .filter(Boolean)
-          : [], // Kalau is_promo false, otomatis dikosongin
+          : [],
       };
-      let propertyId = initialData?.id;
-      if (isEdit) {
-        const { error } = await supabase
-          .from("properties")
-          .update(payload)
-          .eq("id", propertyId);
-        if (error) throw error;
-      } else {
-        const { data, error } = await supabase
-          .from("properties")
-          .insert(payload)
-          .select("id")
-          .single();
-        if (error) throw error;
-        propertyId = data.id;
-      }
 
-      // 2. UPLOAD PENDING IMAGES
+      // 1. SAVE PROPERTY DATA via Server Action
+      const result = await savePropertyAction(payload, initialData?.id);
+      const propertyId = result.id;
+
+      // 2. UPLOAD PENDING IMAGES (Keep storage upload on client, but DB insert on server)
       if (pendingImages.length > 0) {
+        toast.loading(`Mengunggah ${pendingImages.length} foto baru...`, { id: toastId });
         for (const img of pendingImages) {
           const ext = img.file.name.split(".").pop();
           const fileName = `${propertyId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
@@ -248,44 +251,20 @@ export default function PropertyForm({
             const {
               data: { publicUrl },
             } = supabase.storage.from("property-images").getPublicUrl(fileName);
-            await supabase.from("property_images").insert({
-              property_id: propertyId,
-              url: publicUrl,
-              is_primary: img.is_primary,
-              order: 0,
-            });
+            
+            await addPropertyImageAction(propertyId!, publicUrl, img.is_primary);
           }
         }
       }
 
-      // 3. UPDATE EXISTING IMAGES (Cuma update kalau is_primary nya berubah)
+      // 3. UPDATE EXISTING IMAGES via Server Action
       if (isEdit && existingImages.length > 0) {
-        for (const img of existingImages) {
-          if (img.id) {
-            await supabase
-              .from("property_images")
-              .update({ is_primary: img.is_primary })
-              .eq("id", img.id);
-          } else {
-            await supabase
-              .from("property_images")
-              .update({ is_primary: img.is_primary })
-              .eq("url", img.url);
-          }
-        }
+        await updatePropertyImagesAction(existingImages);
       }
 
-      // 4. DELETE REMOVED IMAGES (Hapus dari storage & DB)
+      // 4. DELETE REMOVED IMAGES via Server Action
       if (isEdit && imagesToDelete.length > 0) {
-        for (const img of imagesToDelete) {
-          const pathParts = img.url.split("/property-images/");
-          if (pathParts.length > 1) {
-            await supabase.storage
-              .from("property-images")
-              .remove([pathParts[1]]);
-          }
-          await supabase.from("property_images").delete().eq("url", img.url);
-        }
+        await deletePropertyImagesAction(imagesToDelete);
       }
 
       toast.success(

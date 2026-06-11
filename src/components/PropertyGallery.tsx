@@ -80,7 +80,7 @@ export default function PropertyGallery({ images }: { images: ImageType[] }) {
       <div className="flex flex-col gap-0 w-full">
         {/* ── MAIN FRAME WITH BLUR BACKDROP ── */}
         <div
-          className="relative w-full aspect-[4/3] lg:aspect-[16/9] overflow-hidden bg-bg-surface group cursor-pointer"
+          className="relative w-full aspect-[4/3] lg:aspect-[16/9] overflow-hidden bg-[#1A1A2E] group cursor-pointer"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}

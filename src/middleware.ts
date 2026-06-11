@@ -1,16 +1,17 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { env } from './lib/env'
 
-export async function proxy(request: NextRequest) {
-  console.log('proxy hit:', request.nextUrl.pathname)
-  
-  let supabaseResponse = NextResponse.next({ request })
+export async function middleware(request: NextRequest) {
+  console.log('middleware hit:', request.nextUrl.pathname)
+
+  let supabaseResponse = NextResponse.next({
+    request,
+  })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
+    env.supabaseUrl,
+    env.supabaseAnonKey,
         getAll() {
           return request.cookies.getAll()
         },

@@ -1,10 +1,11 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { deleteClusterAction } from "@/app/actions/cluster-actions";
+import { deleteGenericAction } from "@/app/actions/generic-actions";
 
 type Props = {
   table: "clusters" | "locations" | "testimonials";
@@ -21,27 +22,13 @@ export default function DeleteActionButton({ table, id, itemName }: Props) {
     setIsDeleting(true);
 
     const loadingToast = toast.loading(`Menghapus data...`);
-    const supabase = createSupabaseBrowserClient();
 
     try {
       if (table === "clusters") {
-        const { data: clusterData } = await supabase
-          .from("clusters")
-          .select("image_url")
-          .eq("id", id)
-          .single();
-
-        if (clusterData?.image_url) {
-          const parts = clusterData.image_url.split("/property-images/");
-          if (parts.length > 1) {
-            await supabase.storage.from("property-images").remove([parts[1]]);
-          }
-        }
+        await deleteClusterAction(id);
+      } else {
+        await deleteGenericAction(table, id);
       }
-
-      const { error } = await supabase.from(table).delete().eq("id", id);
-
-      if (error) throw error;
 
       toast.success(`"${itemName}" berhasil dihapus!`, { id: loadingToast });
       router.refresh();

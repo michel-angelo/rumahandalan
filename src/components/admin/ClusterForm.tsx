@@ -5,7 +5,20 @@ import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import RichTextEditor from "./RichTextEditor";
+import dynamic from "next/dynamic";
+import { saveClusterAction } from "@/app/actions/cluster-actions";
+
+// Dynamic import for heavy rich text editor
+const RichTextEditor = dynamic(() => import("./RichTextEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[200px] w-full bg-white/[0.03] border border-white/[0.06] rounded-xl flex items-center justify-center">
+      <p className="text-[12px] text-[#8E8EA8] animate-pulse">
+        Memuat Editor...
+      </p>
+    </div>
+  ),
+});
 
 type Props = {
   initialData?: any;
@@ -77,7 +90,7 @@ export default function ClusterForm({ initialData }: Props) {
     try {
       let uploadedImageUrl = form.image_url;
 
-      // 1. Upload Gambar dulu kalau ada file baru
+      // 1. Upload Gambar dulu kalau ada file baru (Tetap di client untuk storage)
       if (imageFile) {
         const ext = imageFile.name.split(".").pop();
         const fileName = `clusters/cluster-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
@@ -94,17 +107,9 @@ export default function ClusterForm({ initialData }: Props) {
         uploadedImageUrl = publicUrl;
       }
 
-      // 2. Simpan Data ke Database
+      // 2. Simpan Data ke Database via Server Action
       const payload = { ...form, image_url: uploadedImageUrl };
-
-      const { error } = isEdit
-        ? await supabase
-            .from("clusters")
-            .update(payload)
-            .eq("id", initialData.id)
-        : await supabase.from("clusters").insert(payload);
-
-      if (error) throw error;
+      await saveClusterAction(payload, initialData?.id);
 
       toast.success(
         isEdit

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import toast from "react-hot-toast";
+import { saveGenericAction } from "@/app/actions/generic-actions";
 
 type Props = {
   initialData?: any;
@@ -59,18 +60,10 @@ export default function TestimonialForm({ initialData }: Props) {
     );
     setLoading(true);
 
-    const supabase = createSupabaseBrowserClient();
     const payload = { ...form, rating: Number(form.rating) };
 
     try {
-      const { error } = isEdit
-        ? await supabase
-            .from("testimonials")
-            .update(payload)
-            .eq("id", initialData.id)
-        : await supabase.from("testimonials").insert(payload);
-
-      if (error) throw error;
+      await saveGenericAction("testimonials", payload, initialData?.id);
 
       toast.success(
         isEdit

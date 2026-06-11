@@ -1,10 +1,10 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { createSupabaseBrowserClient } from "@/lib/supabase-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { deletePropertyAction } from "@/app/actions/property-actions";
 
 export default function DeleteProperty({
   id,
@@ -21,34 +21,9 @@ export default function DeleteProperty({
     setIsDeleting(true);
 
     const loadingToast = toast.loading("Menghapus properti & gambar...");
-    const supabase = createSupabaseBrowserClient();
 
     try {
-      // 1. Ambil list gambar yang nempel di properti ini
-      const { data: images } = await supabase
-        .from("property_images")
-        .select("url")
-        .eq("property_id", id);
-
-      // 2. Hapus file fisik dari Storage (kalau ada)
-      if (images && images.length > 0) {
-        const filePaths = images
-          .map((img) => {
-            // Ambil path relatif setelah nama bucket "property-images/"
-            const parts = img.url.split("/property-images/");
-            return parts.length > 1 ? parts[1] : null;
-          })
-          .filter(Boolean) as string[];
-
-        if (filePaths.length > 0) {
-          await supabase.storage.from("property-images").remove(filePaths);
-        }
-      }
-
-      // 3. Hapus data dari database (Tabel property_images akan ikut bersih jika ada relasi Cascade)
-      const { error } = await supabase.from("properties").delete().eq("id", id);
-
-      if (error) throw error;
+      await deletePropertyAction(id);
 
       toast.success("Properti & file berhasil dihapus!", { id: loadingToast });
       router.refresh();

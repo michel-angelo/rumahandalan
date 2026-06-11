@@ -1,12 +1,12 @@
 import { supabase } from "@/lib/supabase";
 import { MetadataRoute } from "next";
+import { SITE_CONFIG } from "@/lib/constants";
 
 // WAJIB ADA: Biar sitemap di-generate ulang setiap 1 jam (3600 detik)
-// Kalau nggak ada ini, Next.js bakal nge-cache sitemap ini selamanya sejak build
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://www.rumahandalan.com";
+  const baseUrl = SITE_CONFIG.baseUrl;
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

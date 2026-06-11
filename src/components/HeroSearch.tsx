@@ -3,27 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const districts = [
-  "Beji",
-  "Bojongsari",
-  "Cimanggis",
-  "Cinere",
-  "Cipayung",
-  "Cilodong",
-  "Limo",
-  "Pancoran Mas",
-  "Sawangan",
-  "Sukmajaya",
-  "Tapos",
-];
-
 const propertyTypes = [
   { value: "", label: "Semua Tipe" },
   { value: "rumah", label: "Rumah" },
   { value: "apartemen", label: "Apartemen" },
 ];
 
-export default function HeroSearch() {
+export default function HeroSearch({ districts }: { districts: string[] }) {
   const router = useRouter();
   const [type, setType] = useState("");
   const [district, setDistrict] = useState("");
