@@ -29,7 +29,7 @@ export default function Footer() {
                 className="object-contain object-left"
               />
             </Link>
-            <p className="text-bg-surface/60 text-[15px] leading-relaxed max-w-sm">
+            <p className="text-white/80 text-[15px] leading-relaxed max-w-sm">
               Tim kecil dengan pendampingan penuh. Kami bantu lebih dari 30
               keluarga menemukan rumah yang tepat di Depok sejak 2022.
             </p>
@@ -38,14 +38,14 @@ export default function Footer() {
           {/* Navigasi Simpel tapi Elegan */}
           <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12">
             <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent-light mb-6">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/90 mb-6">
                 Navigasi
-              </h4>
+              </h3>
               <ul className="flex flex-col gap-4">
                 <li>
                   <Link
                     href="/listings"
-                    className="text-[13px] text-white/70 hover:text-white transition-colors"
+                    className="text-[13px] text-white/80 hover:text-white transition-colors"
                   >
                     Koleksi Properti
                   </Link>
@@ -53,7 +53,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/clusters"
-                    className="text-[13px] text-white/70 hover:text-white transition-colors"
+                    className="text-[13px] text-white/80 hover:text-white transition-colors"
                   >
                     Eksplorasi Cluster
                   </Link>
@@ -61,7 +61,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/about"
-                    className="text-[13px] text-white/70 hover:text-white transition-colors"
+                    className="text-[13px] text-white/80 hover:text-white transition-colors"
                   >
                     Filosofi Kami
                   </Link>
@@ -70,16 +70,16 @@ export default function Footer() {
             </div>
 
             <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent-light mb-6">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/90 mb-6">
                 Hubungi
-              </h4>
+              </h3>
               <ul className="flex flex-col gap-4">
                 <li>
                   <a
                     href={`https://wa.me/${SITE_CONFIG.whatsappNumber}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[13px] text-white/70 hover:text-white transition-colors"
+                    className="text-[13px] text-white/80 hover:text-white transition-colors"
                   >
                     WhatsApp Konsultasi
                   </a>
@@ -87,7 +87,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="mailto:halo@rumahandalan.com"
-                    className="text-[13px] text-white/70 hover:text-white transition-colors"
+                    className="text-[13px] text-white/80 hover:text-white transition-colors"
                   >
                     halo@rumahandalan.com
                   </a>
@@ -96,10 +96,10 @@ export default function Footer() {
             </div>
 
             <div className="col-span-2 md:col-span-1">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent-light mb-6">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/90 mb-6">
                 Kantor
-              </h4>
-              <p className="text-[13px] text-white/70 leading-relaxed">
+              </h3>
+              <p className="text-[13px] text-white/80 leading-relaxed">
                 Kawasan Depok Utama,
                 <br />
                 Jawa Barat, Indonesia
@@ -110,7 +110,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 gap-4">
-          <p className="text-white/40 text-[11px] uppercase tracking-widest text-center md:text-left">
+          <p className="text-white/80 text-[11px] uppercase tracking-widest text-center md:text-left">
             &copy; {new Date().getFullYear()} Rumah Andalan by Baß.
           </p>
           <div className="flex gap-6">
@@ -127,7 +127,7 @@ export default function Footer() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/40 hover:text-white text-[11px] uppercase tracking-widest transition-colors"
+                className="text-white/80 hover:text-white text-[11px] uppercase tracking-widest transition-colors"
               >
                 {social.label}
               </a>

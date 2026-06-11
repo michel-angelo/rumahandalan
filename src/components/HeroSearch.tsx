@@ -36,8 +36,9 @@ export default function HeroSearch({ districts }: { districts: string[] }) {
       <div className="flex flex-col lg:flex-row border-t border-b border-text-primary/20 divide-y lg:divide-y-0 lg:divide-x divide-text-primary/20">
         {/* Input: Tipe */}
         <div className="flex-1 py-4 lg:py-6 lg:pr-6">
-          <label className={labelClass}>Tipe Properti</label>
+          <label htmlFor="search-type" className={labelClass}>Tipe Properti</label>
           <select
+            id="search-type"
             value={type}
             onChange={(e) => setType(e.target.value)}
             className={selectClass}
@@ -52,8 +53,9 @@ export default function HeroSearch({ districts }: { districts: string[] }) {
 
         {/* Input: Lokasi */}
         <div className="flex-1 py-4 lg:py-6 lg:px-6">
-          <label className={labelClass}>Kawasan</label>
+          <label htmlFor="search-district" className={labelClass}>Kawasan</label>
           <select
+            id="search-district"
             value={district}
             onChange={(e) => setDistrict(e.target.value)}
             className={selectClass}
@@ -69,8 +71,9 @@ export default function HeroSearch({ districts }: { districts: string[] }) {
 
         {/* Input: Harga */}
         <div className="flex-1 py-4 lg:py-6 lg:px-6">
-          <label className={labelClass}>Anggaran Maksimal</label>
+          <label htmlFor="search-maxprice" className={labelClass}>Anggaran Maksimal</label>
           <select
+            id="search-maxprice"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
             className={selectClass}
