@@ -77,6 +77,7 @@ export default function Navbar() {
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden text-text-primary focus:outline-none"
             aria-label="Toggle Menu"
+            aria-expanded={isOpen}
           >
             <div className="flex flex-col gap-1.5 w-7 items-end">
               <span
@@ -96,6 +97,7 @@ export default function Navbar() {
       {/* Mobile Menu Fullscreen Overlay */}
       <div
         className={`md:hidden fixed top-24 left-0 w-full h-[calc(100vh-6rem)] bg-bg-page border-t border-text-primary/10 transition-all duration-500 overflow-y-auto ${isOpen ? "translate-x-0 opacity-100 visible" : "translate-x-full opacity-0 invisible"}`}
+        aria-hidden={!isOpen}
       >
         <div className="px-5 py-8 flex flex-col gap-6">
           <Link

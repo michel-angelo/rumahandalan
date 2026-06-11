@@ -76,7 +76,7 @@ export default function Footer() {
               <ul className="flex flex-col gap-4">
                 <li>
                   <a
-                    href="https://wa.me/${SITE_CONFIG.whatsappNumber}"
+                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[13px] text-white/70 hover:text-white transition-colors"
