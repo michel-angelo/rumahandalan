@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { cache } from "react";
 import { SITE_CONFIG } from "@/lib/constants";
+import DOMPurify from "isomorphic-dompurify";
 
 const getCluster = cache(async (slug: string) => {
   const { data, error } = await supabase
@@ -62,7 +63,8 @@ export default async function ClusterDetailPage({
     cluster.image_url ||
     cluster.images?.find((img) => img.is_primary)?.image_url ||
     cluster.images?.[0]?.image_url;
-  const waLink = `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(`Halo, saya ingin menjadwalkan kunjungan untuk melihat cluster *${cluster.name}*.`)}`;
+  
+  const contactApiUrl = `/api/contact/cluster/${cluster.id}`;
 
   return (
     <div className="bg-bg-page min-h-screen pt-24 pb-32">
@@ -103,7 +105,7 @@ export default async function ClusterDetailPage({
                 </p>
               </div>
               <a
-                href={waLink}
+                href={contactApiUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block border-b border-text-primary pb-1 self-start text-[11px] font-bold uppercase tracking-[0.3em] text-text-primary hover:text-accent hover:border-accent transition-colors"
@@ -136,7 +138,9 @@ export default async function ClusterDetailPage({
             </h2>
             <div
               className="tiptap-content text-[16px] text-text-secondary leading-relaxed font-body"
-              dangerouslySetInnerHTML={{ __html: cluster.description }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(cluster.description),
+              }}
             />
           </div>
         )}
@@ -239,7 +243,7 @@ export default async function ClusterDetailPage({
           </p>
         </div>
         <a
-          href={waLink}
+          href={contactApiUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap hover:bg-accent hover:text-white transition-colors"

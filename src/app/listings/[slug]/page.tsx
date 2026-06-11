@@ -64,6 +64,7 @@ export async function generateMetadata({
   const primaryImg =
     property.images?.find((img) => img.is_primary) ?? property.images?.[0];
   const imageUrl = primaryImg?.url ?? "/og-image.jpg";
+  const propertyUrl = `${SITE_CONFIG.baseUrl}/listings/${property.slug}`;
 
   return {
     title: `${property.title} | Kurasi Rumah Andalan`,
@@ -71,6 +72,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${property.title} | Rumah Andalan`,
       description: property.description,
+      url: propertyUrl,
       images: [{ url: imageUrl, width: 1200, height: 630 }],
     },
     twitter: {
@@ -98,11 +100,8 @@ export default async function PropertyDetailPage({
   const otherImgs = rawImages.filter((img) => !img.is_primary);
   const allImages = primaryImg ? [primaryImg, ...otherImgs] : otherImgs;
 
-  const propertyUrl = `https://www.rumahandalan.com/listings/${property.slug}`;
-  const waMessage = encodeURIComponent(
-    `Halo Rumah Andalan, saya tertarik dengan properti *${property.title}*.\n\nLink: ${propertyUrl}\n\nApakah saya bisa menjadwalkan kunjungan?`,
-  );
-  const waLink = `https://wa.me/${property.whatsapp_number}?text=${waMessage}`;
+  // Protect privacy by using redirection API instead of raw phone number in HTML
+  const contactApiUrl = `/api/contact/${property.id}`;
 
   const labelClass =
     "text-[10px] font-bold text-text-muted uppercase tracking-[0.3em] mb-1 block";
@@ -273,7 +272,9 @@ export default async function PropertyDetailPage({
                 <div className="prose prose-lg prose-p:text-text-secondary prose-p:leading-relaxed max-w-none font-body text-[15px]">
                   <div
                     className="tiptap-content text-[16px] text-text-secondary leading-relaxed font-body"
-                    dangerouslySetInnerHTML={{ __html: property.description }}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(property.description),
+                    }}
                   />{" "}
                 </div>
               </div>
@@ -370,7 +371,7 @@ export default async function PropertyDetailPage({
 
                 <div className="flex flex-col gap-4">
                   <a
-                    href={waLink}
+                    href={contactApiUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full text-center py-4 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-accent transition-colors"
@@ -466,7 +467,7 @@ export default async function PropertyDetailPage({
           </p>
         </div>
         <a
-          href={waLink}
+          href={contactApiUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3 bg-text-primary text-bg-page text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap"

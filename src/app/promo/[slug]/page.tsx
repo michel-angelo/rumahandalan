@@ -534,7 +534,9 @@ export default async function PromoLandingPage({
             </p>
             <div
               className="tiptap-content text-[16px] text-text-secondary leading-relaxed font-body"
-              dangerouslySetInnerHTML={{ __html: property.description }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(property.description),
+              }}
             />
           </div>
         </section>

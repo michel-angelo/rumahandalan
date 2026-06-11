@@ -1,6 +1,7 @@
 // src/app/about/page.tsx
 import { Metadata } from "next";
 import AboutAndalan from "@/components/AboutAndalan";
+import { SITE_CONFIG } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: 'Tentang Kami | Tim di Balik Rumah Andalan',
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Kenali Tim Rumah Andalan',
     description: 'Bertemu dengan para spesialis yang siap membantu Anda menemukan hunian terbaik di Depok dengan jujur dan profesional.',
-    url: 'https://rumahandalan.com/about',
+    url: `${SITE_CONFIG.baseUrl}/about`,
     images: [{ url: '/og-home.jpg', width: 1200, height: 630 }],
     type: 'website',
   },
