@@ -235,6 +235,11 @@ export default async function Home() {
 
   return (
     <div className="bg-bg-page min-h-screen">
+      {/* ── PRELOAD HERO IMAGE ── */}
+      {heroImage && (
+        <link rel="preload" as="image" href={heroImage} />
+      )}
+
       {/* ── HERO SECTION (SPLIT ASIMETRIS) ── */}
       <section className="relative min-h-[90vh] flex items-center pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
