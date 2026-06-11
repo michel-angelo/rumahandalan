@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AosInit from "@/components/AosInit";
-import { GoogleAnalytics } from "@next/third-parties/google"; // <-- 1. Import GA
+import LazyGoogleAnalytics from "@/components/LazyGoogleAnalytics"; // <-- 1. Import Lazy GA
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -90,7 +90,7 @@ export default function RootLayout({
         <Footer />
 
         {/* 3. PASANG SCRIPT GOOGLE ANALYTICS DI SINI */}
-        <GoogleAnalytics gaId="G-2XSM5XF1BY" />
+        <LazyGoogleAnalytics gaId="G-2XSM5XF1BY" />
       </body>
     </html>
   );
