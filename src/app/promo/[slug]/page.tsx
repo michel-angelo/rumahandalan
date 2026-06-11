@@ -6,6 +6,7 @@ import Image from "next/image";
 import PropertyGallery from "@/components/PropertyGallery";
 import PropertyJsonLd from "@/components/PropertyJsonLd";
 import PromoClient from "@/components/PromoClient";
+import DOMPurify from "isomorphic-dompurify";
 
 // ─────────────────────────────────────────
 // HELPERS

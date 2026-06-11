@@ -6,6 +6,8 @@ import PropertyJsonLd from "@/components/PropertyJsonLd";
 import PropertyGallery from "@/components/PropertyGallery";
 import Image from "next/image";
 import { cache } from "react";
+import { SITE_CONFIG } from "@/lib/constants";
+import DOMPurify from "isomorphic-dompurify";
 
 const getProperty = cache(async (slug: string) => {
   const { data, error } = await supabase
