@@ -200,7 +200,6 @@ export default async function PromoLandingPage({
         <section className="relative w-full h-[85svh] min-h-[560px] max-h-[820px] overflow-hidden">
           {heroUrl && (
             <>
-              {/* Blur backdrop */}
               <div className="absolute inset-0 scale-110">
                 <Image
                   src={heroUrl}
@@ -212,7 +211,6 @@ export default async function PromoLandingPage({
                   aria-hidden
                 />
               </div>
-              {/* Main image */}
               <Image
                 src={heroUrl}
                 alt={property.title}
@@ -225,7 +223,6 @@ export default async function PromoLandingPage({
             </>
           )}
 
-          {/* Dark gradient — bottom heavy */}
           <div className="absolute inset-0 bg-gradient-to-t from-text-primary via-text-primary/40 to-transparent" />
 
           {/* Content */}
@@ -236,7 +233,6 @@ export default async function PromoLandingPage({
               </p>
             )}
 
-            {/* Big price — anchor attention immediately */}
             <p className="font-display text-accent text-4xl sm:text-5xl md:text-6xl leading-none mb-3">
               {priceDisplay}
             </p>
@@ -249,7 +245,6 @@ export default async function PromoLandingPage({
               {locStr}
             </p>
 
-            {/* Specs inline */}
             <div className="flex flex-wrap gap-4 mb-8">
               {specs.map((s) => (
                 <div key={s.label} className="flex items-baseline gap-1.5">

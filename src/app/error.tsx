@@ -11,14 +11,12 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error("Global Error Boundary:", error);
   }, [error]);
 
   return (
     <div className="min-h-screen bg-bg-page flex items-center justify-center px-5">
       <div className="max-w-md w-full text-center">
-        {/* Error Code / Icon */}
         <div className="mb-8 flex justify-center">
           <div className="w-20 h-20 bg-red-500/10 flex items-center justify-center rounded-full border border-red-500/20">
             <svg
@@ -65,7 +63,6 @@ export default function Error({
           </Link>
         </div>
 
-        {/* Technical Detail (Optional, subtle) */}
         {process.env.NODE_ENV === "development" && (
           <div className="mt-12 p-4 bg-red-500/5 border border-red-500/10 rounded-lg text-left">
             <p className="text-[10px] font-mono text-red-400 break-all">
